@@ -4,7 +4,7 @@
 // @version      0.1
 // @description  Azusa 查找未做种带自动翻页
 // @author       ERST
-// @match        https://azusa.wiki/torrents*
+// @match        https://azusa.wiki/*torrents*
 // @grant        none
 // ==/UserScript==
 
