@@ -1,6 +1,7 @@
 // ==UserScript==
 // @name         Azusa 种子页删除已做种种子
 // @namespace    https://github.com/ERSTT
+// @icon         https://azusa.wiki/favicon.ico
 // @version      0.1
 // @description  Azusa 种子页删除已做种种子
 // @author       ERST
