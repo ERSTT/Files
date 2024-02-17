@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         Azusa查找未做种
+// @name         Azusa 查找未做种
 // @namespace    http://tampermonkey.net/
 // @version      0.1
-// @description  Azusa查找未做种带自动翻页
+// @description  Azusa 查找未做种带自动翻页
 // @author       ERST
 // @match        https://azusa.wiki/torrents*
 // @grant        none
