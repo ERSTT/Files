@@ -43,7 +43,7 @@
                 if(nextPageLink) {
                     nextPageLink.click();
                 }
-            }, 3000); // 3秒延迟
+            }, 1000); // 1秒延迟
         }
     }
 })();
