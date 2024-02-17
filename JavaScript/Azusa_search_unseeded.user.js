@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Azusa 查找未做种
-// @namespace    http://tampermonkey.net/
+// @namespace    https://github.com/ERSTT
 // @version      0.1
 // @description  Azusa 查找未做种带自动翻页
 // @author       ERST
