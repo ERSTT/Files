@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Azusa 种子页删除已做种条例
-// @namespace    http://tampermonkey.net/
+// @namespace    https://github.com/ERSTT
 // @version      0.1
 // @description  Azusa 种子页删除已做种条例
 // @author       ERST
