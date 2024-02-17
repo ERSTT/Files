@@ -12,7 +12,7 @@
 (function() {
     'use strict';
 
-    // 删除已做种条例
+    // 删除已做种种子
     let divElements = document.querySelectorAll('div[title="seeding 100%"]');
     divElements.forEach(divElement => {
         let trElement = divElement.closest('tr');
