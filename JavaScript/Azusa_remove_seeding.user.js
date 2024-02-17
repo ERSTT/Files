@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         Azusa 种子页删除已做种条例
+// @name         Azusa 种子页删除已做种种子
 // @namespace    https://github.com/ERSTT
 // @version      0.1
-// @description  Azusa 种子页删除已做种条例
+// @description  Azusa 种子页删除已做种种子
 // @author       ERST
 // @match        https://azusa.wiki/torrents*
 // @grant        none
