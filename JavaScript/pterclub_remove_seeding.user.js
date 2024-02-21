@@ -3,7 +3,7 @@
 // @namespace    https://github.com/ERSTT
 // @icon         https://pterclub.com/favicon.ico
 // @version      0.1
-// @description  Azusa 种子页删除已做种种子
+// @description  猫站种子页删除已做种种子
 // @author       ERST
 // @match        https://pterclub.com/*torrents*
 // @grant        none
