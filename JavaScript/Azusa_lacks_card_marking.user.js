@@ -2,7 +2,7 @@
 // @name         Azusa 缺少卡片标记
 // @namespace    https://github.com/ERSTT
 // @icon         https://azusa.wiki/favicon.ico
-// @version      0.6
+// @version      0.7
 // @description  Azusa 缺少卡片标记
 // @author       ERST
 // @match        https://azusa.wiki/*lottery*
@@ -39,7 +39,7 @@
                         var idsToKeep1 = ids1.filter(id => !cardIds1.includes(id));
                         var result1 = response2.response.data.filter(item => idsToKeep1.includes(item.id));
                         combinedResult = combinedResult.concat(result1);
-                    }, 500);
+                    }, 100);
                 }
             });
 
@@ -54,7 +54,7 @@
                         var idsToKeep2 = ids2.filter(id => !cardIds1.includes(id));
                         var result2 = response3.response.data.filter(item => idsToKeep2.includes(item.id));
                         combinedResult = combinedResult.concat(result2);
-                    }, 500);
+                    }, 100);
                 }
             });
 
@@ -80,7 +80,7 @@
                                 element.parentNode.style.backgroundColor = "red";
                             });
                         });
-                    }, 500);
+                    }, 100);
                 }
             });
         }
