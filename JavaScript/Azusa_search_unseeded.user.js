@@ -2,11 +2,13 @@
 // @name         Azusa 查找未做种
 // @namespace    https://github.com/ERSTT
 // @icon         https://azusa.wiki/favicon.ico
-// @version      0.1
+// @version      0.2
 // @description  Azusa 查找未做种带自动翻页
 // @author       ERST
 // @match        https://azusa.wiki/*torrents*
 // @grant        none
+// @updateURL    https://github.com/ERSTT/Files/raw/main/JavaScript/Azusa_search_unseeded.user.js
+// @downloadURL  https://github.com/ERSTT/Files/raw/main/JavaScript/Azusa_search_unseeded.user.js
 // ==/UserScript==
 
 (function() {
