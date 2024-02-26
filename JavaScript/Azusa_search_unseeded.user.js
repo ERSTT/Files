@@ -42,7 +42,7 @@
             torrentsTable.parentNode.insertBefore(messageDiv, torrentsTable.nextSibling);
 
             setTimeout(function() {
-                var nextPageLink = document.querySelector('p:nth-child(2) > a:nth-child(2) > b');
+                var nextPageLink = document.querySelector('a:nth-child(2) > b');
                 if(nextPageLink) {
                     nextPageLink.click();
                 }
