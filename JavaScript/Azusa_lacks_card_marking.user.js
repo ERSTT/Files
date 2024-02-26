@@ -2,7 +2,7 @@
 // @name         Azusa 缺少卡片标记
 // @namespace    https://github.com/ERSTT
 // @icon         https://azusa.wiki/favicon.ico
-// @version      0.5
+// @version      0.6
 // @description  Azusa 缺少卡片标记
 // @author       ERST
 // @match        https://azusa.wiki/*lottery*
@@ -34,10 +34,12 @@
                 url: url2,
                 responseType: "json",
                 onload: function(response2) {
-                    var ids1 = response2.response.data.map(item => item.id);
-                    var idsToKeep1 = ids1.filter(id => !cardIds1.includes(id));
-                    var result1 = response2.response.data.filter(item => idsToKeep1.includes(item.id));
-                    combinedResult = combinedResult.concat(result1);
+                    setTimeout(function() {
+                        var ids1 = response2.response.data.map(item => item.id);
+                        var idsToKeep1 = ids1.filter(id => !cardIds1.includes(id));
+                        var result1 = response2.response.data.filter(item => idsToKeep1.includes(item.id));
+                        combinedResult = combinedResult.concat(result1);
+                    }, 500);
                 }
             });
 
@@ -47,10 +49,12 @@
                 url: url3,
                 responseType: "json",
                 onload: function(response3) {
-                    var ids2 = response3.response.data.map(item => item.id);
-                    var idsToKeep2 = ids2.filter(id => !cardIds1.includes(id));
-                    var result2 = response3.response.data.filter(item => idsToKeep2.includes(item.id));
-                    combinedResult = combinedResult.concat(result2);
+                    setTimeout(function() {
+                        var ids2 = response3.response.data.map(item => item.id);
+                        var idsToKeep2 = ids2.filter(id => !cardIds1.includes(id));
+                        var result2 = response3.response.data.filter(item => idsToKeep2.includes(item.id));
+                        combinedResult = combinedResult.concat(result2);
+                    }, 500);
                 }
             });
 
@@ -60,23 +64,26 @@
                 url: url4,
                 responseType: "json",
                 onload: function(response4) {
-                    var ids3 = response4.response.data.map(item => item.id);
-                    var idsToKeep3 = ids3.filter(id => !cardIds1.includes(id));
-                    var result3 = response4.response.data.filter(item => idsToKeep3.includes(item.id));
-                    combinedResult = combinedResult.concat(result3);
+                    setTimeout(function() {
+                        var ids3 = response4.response.data.map(item => item.id);
+                        var idsToKeep3 = ids3.filter(id => !cardIds1.includes(id));
+                        var result3 = response4.response.data.filter(item => idsToKeep3.includes(item.id));
+                        combinedResult = combinedResult.concat(result3);
 
-                    // 输出结果到控制台
-                    console.log(combinedResult);
+                        // 输出结果到控制台
+                        console.log(combinedResult);
 
-                    // 遍历网页上的pic改红
-                    combinedResult.forEach(function(item) {
-                        var elements = document.querySelectorAll('img[src="' + item.pic + '"]');
-                        elements.forEach(function(element) {
-                            element.parentNode.style.backgroundColor = "red";
+                        // 遍历网页上的pic改红
+                        combinedResult.forEach(function(item) {
+                            var elements = document.querySelectorAll('img[src="' + item.pic + '"]');
+                            elements.forEach(function(element) {
+                                element.parentNode.style.backgroundColor = "red";
+                            });
                         });
-                    });
+                    }, 500);
                 }
             });
         }
     });
 })();
+
