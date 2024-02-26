@@ -2,7 +2,7 @@
 // @name         Azusa 缺少卡片标记
 // @namespace    https://github.com/ERSTT
 // @icon         https://azusa.wiki/favicon.ico
-// @version      0.1
+// @version      0.3
 // @description  Azusa 缺少卡片标记
 // @author       ERST
 // @match        https://azusa.wiki/*lottery*
