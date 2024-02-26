@@ -14,6 +14,10 @@
 
     var url1 = "https://azusa.wiki/lotterySettingSave.php?action=exchangeCharacterCardsPool";
     var url2 = "https://azusa.wiki/lotterySettingSave.php?action=userCharacterCards";
+    var url3 = "https://azusa.wiki/lotterySettingSave.php?action=specialExchangeCharacterCardsPool";
+    var url4 = "https://azusa.wiki/lotterySettingSave.php?action=lotteryCharacterCardsPool";
+
+    var combinedResult = [];
 
     GM_xmlhttpRequest({
         method: "GET",
@@ -25,20 +29,40 @@
                 url: url2,
                 responseType: "json",
                 onload: function(response2) {
-                    var ids1 = response1.response.data.map(item => item.id);
-                    var cardIds2 = response2.response.data.map(item => item.card_id);
-                    var idsToKeep = ids1.filter(id => !cardIds2.includes(id));
-                    var result = response1.response.data.filter(item => idsToKeep.includes(item.id));
+                    GM_xmlhttpRequest({
+                        method: "GET",
+                        url: url3,
+                        responseType: "json",
+                        onload: function(response3) {
+                            GM_xmlhttpRequest({
+                                method: "GET",
+                                url: url4,
+                                responseType: "json",
+                                onload: function(response4) {
+                                    var ids1 = response1.response.data.map(item => item.id);
+                                    var cardIds2 = response2.response.data.map(item => item.card_id);
+                                    var cardIds3 = response3.response.data.map(item => item.card_id);
+                                    var cardIds4 = response4.response.data.map(item => item.card_id);
+                                    var idsToKeep = ids1.filter(id => !cardIds2.includes(id) && !cardIds3.includes(id) && !cardIds4.includes(id));
+                                    var result1 = response1.response.data.filter(item => idsToKeep.includes(item.id));
+                                    var result2 = response3.response.data.filter(item => idsToKeep.includes(item.id));
+                                    var result3 = response4.response.data.filter(item => idsToKeep.includes(item.id));
 
-                    // 对比结果输出结果到控制台
-                    console.log(result);
+                                    combinedResult = combinedResult.concat(result1, result2, result3);
 
-                    // 遍历网页上的pic改红
-                    result.forEach(function(item) {
-                        var elements = document.querySelectorAll('img[src="' + item.pic + '"]');
-                        elements.forEach(function(element) {
-                            element.parentNode.style.backgroundColor = "red";
-                        });
+                                    // 输出结果到控制台
+                                    console.log(combinedResult);
+
+                                    // 遍历网页上的pic改红
+                                    combinedResult.forEach(function(item) {
+                                        var elements = document.querySelectorAll('img[src="' + item.pic + '"]');
+                                        elements.forEach(function(element) {
+                                            element.parentNode.style.backgroundColor = "red";
+                                        });
+                                    });
+                                }
+                            });
+                        }
                     });
                 }
             });
