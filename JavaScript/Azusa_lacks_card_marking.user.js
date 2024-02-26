@@ -12,7 +12,7 @@
 (function() {
     'use strict';
 
-    var url1 = "https://azusa.wiki/lotterySettingSave.php?action=lotteryCharacterCardsPool";
+    var url1 = "https://azusa.wiki/lotterySettingSave.php?action=exchangeCharacterCardsPool";
     var url2 = "https://azusa.wiki/lotterySettingSave.php?action=userCharacterCards";
 
     GM_xmlhttpRequest({
