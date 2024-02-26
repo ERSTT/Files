@@ -2,11 +2,13 @@
 // @name         Azusa 缺少卡片标记
 // @namespace    https://github.com/ERSTT
 // @icon         https://azusa.wiki/favicon.ico
-// @version      0.4
+// @version      0.5
 // @description  Azusa 缺少卡片标记
 // @author       ERST
 // @match        https://azusa.wiki/*lottery*
 // @grant        GM_xmlhttpRequest
+// @updateURL    https://github.com/ERSTT/Files/raw/main/JavaScript/Azusa_lacks_card_marking.user.js
+// @downloadURL  https://github.com/ERSTT/Files/raw/main/JavaScript/Azusa_lacks_card_marking.user.js
 // ==/UserScript==
 
 (function() {
