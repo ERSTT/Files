@@ -1,9 +1,9 @@
 // ==UserScript==
-// @name         Azusa 拥有卡片标绿和缺少卡片标记
+// @name         Azusa 卡片标记
 // @namespace    https://github.com/ERSTT
 // @icon         https://azusa.wiki/favicon.ico
 // @version      0.1
-// @description  Azusa 拥有卡片标绿和缺少卡片标记
+// @description  Azusa 卡片标记
 // @author       ERST
 // @match        https://azusa.wiki/*lottery*
 // @grant        GM_xmlhttpRequest
