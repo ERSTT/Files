@@ -1,7 +1,8 @@
 // ==UserScript==
 // @name         Azusa 一键翻转所有卡片
-// @namespace    http://tampermonkey.net/
-// @version      1.0
+// @namespace    https://github.com/ERSTT
+// @icon         https://azusa.wiki/favicon.ico
+// @version      1.1
 // @description  Azusa 一键翻转所有卡片
 // @author       ERST
 // @match        https://azusa.wiki/*lottery*lottery
