@@ -2,7 +2,7 @@
 // @name         Azusa 查找未做种
 // @namespace    https://github.com/ERSTT
 // @icon         https://azusa.wiki/favicon.ico
-// @version      0.2
+// @version      1.0
 // @description  Azusa 查找未做种带自动翻页
 // @author       ERST
 // @match        https://azusa.wiki/*torrents*
