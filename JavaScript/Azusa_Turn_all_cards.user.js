@@ -6,9 +6,11 @@
 // @description  Azusa 一键翻转所有卡片
 // @author       ERST
 // @match        https://azusa.wiki/*lottery*lottery
+// @match        https://zimiao.icu/*lottery*lottery
 // @grant        none
-// @updateURL    https://github.com/ERSTT/Files/raw/main/JavaScript/Azusa_Turn_all_cards.user.js
-// @downloadURL  https://github.com/ERSTT/Files/raw/main/JavaScript/Azusa_Turn_all_cards.user.js
+// @updateURL    https://raw.githubusercontent.com/ERSTT/Files/refs/heads/main/JavaScript/Azusa_Turn_all_cards.user.js
+// @downloadURL  https://raw.githubusercontent.com/ERSTT/Files/refs/heads/main/JavaScript/Azusa_Turn_all_cards.user.js
+// @changelog    添加新域名
 // ==/UserScript==
 
 (function() {
