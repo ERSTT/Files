@@ -2,13 +2,15 @@
 // @name         Azusa 卡片标记
 // @namespace    https://github.com/ERSTT
 // @icon         https://azusa.wiki/favicon.ico
-// @version      0.1
+// @version      1.0
 // @description  Azusa 卡片标记
 // @author       ERST
 // @match        https://azusa.wiki/*lottery*
+// @match        https://zimiao.icu/*lottery*
 // @grant        GM_xmlhttpRequest
-// @updateURL    https://github.com/ERSTT/Files/raw/main/JavaScript/Azusa_card_marking.user.js
-// @downloadURL  https://github.com/ERSTT/Files/raw/main/JavaScript/Azusa_card_marking.user.js
+// @updateURL    https://raw.githubusercontent.com/ERSTT/Files/refs/heads/main/JavaScript/Azusa_card_marking.user.js
+// @downloadURL  https://raw.githubusercontent.com/ERSTT/Files/refs/heads/main/JavaScript/Azusa_card_marking.user.js
+// @changelog    添加新域名
 // ==/UserScript==
 
 (function() {
