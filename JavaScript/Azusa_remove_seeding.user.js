@@ -6,9 +6,11 @@
 // @description  Azusa 种子页删除已做种种子
 // @author       ERST
 // @match        https://azusa.wiki/*torrents*
+// @match        https://zimiao.icu/*torrents*
 // @grant        none
-// @updateURL    https://github.com/ERSTT/Files/raw/main/JavaScript/Azusa_remove_seeding.user.js
-// @downloadURL  https://github.com/ERSTT/Files/raw/main/JavaScript/Azusa_remove_seeding.user.js
+// @updateURL    https://raw.githubusercontent.com/ERSTT/Files/refs/heads/main/JavaScript/Azusa_remove_seeding.user.js
+// @downloadURL  https://raw.githubusercontent.com/ERSTT/Files/refs/heads/main/JavaScript/Azusa_remove_seeding.user.js
+// @changelog    添加新域名
 // ==/UserScript==
 
 (function() {
