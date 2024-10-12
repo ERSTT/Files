@@ -2,7 +2,7 @@
 // @name         Azusa 抽卡界面添加统计
 // @namespace    https://github.com/ERSTT
 // @icon         https://azusa.wiki/favicon.ico
-// @version      3.2
+// @version      3.3
 // @description  Azusa 抽卡界面添加统计
 // @author       ERST
 // @match        https://azusa.wiki/*lottery*lottery
@@ -11,7 +11,7 @@
 // @updateURL    https://raw.githubusercontent.com/ERSTT/Files/refs/heads/main/JavaScript/Azusa_add_statistics_to_lottery.user.js
 // @downloadURL  https://raw.githubusercontent.com/ERSTT/Files/refs/heads/main/JavaScript/Azusa_add_statistics_to_lottery.user.js
 // @require      https://cdn.jsdelivr.net/npm/chart.js
-// @changelog    调整概率计算和修改部分描述
+// @changelog    修复饼图变量
 // ==/UserScript==
 
 (function () {
@@ -124,7 +124,7 @@
         bindCheckboxEvents(ruleTable, minDrawCount, drawCount, characterCount, item_map);
 
         // 初始化图表
-        initializeChart(minDrawCount, drawCount, item_map);
+        initializeChart(minDrawCount, drawCount, characterCount, item_map);
     }
 
     function bindCheckboxEvents(ruleTable, initialMinDrawCount, initialDrawCount, characterCount, item_map) {
@@ -159,13 +159,14 @@
         ruleTable.querySelector('#WinningProbability').innerText = `角色: ${characterCount || 0} 个（抽到概率为 ${(WinningProbability * 100).toFixed(2) || 0}% ）`;
 
         // 更新图表
-        initializeChart(minDrawCount, drawCount, item_map); // 只传入最新的参数
+        initializeChart(minDrawCount, drawCount, characterCount, item_map); // 只传入最新的参数
     }
 
     let currentChart; // 存储当前图表的引用
 
-    function initializeChart(minDrawCount, drawCount, item_map) {
+    function initializeChart(minDrawCount, drawCount, characterCount, item_map) {
         const unluckyCount = Math.max(0, (minDrawCount - drawCount)); // 计算未中奖次数
+        const character = characterCount
         const ctx = document.getElementById('lotteryChart').getContext('2d');
 
         // 如果当前图表存在，销毁它
@@ -179,9 +180,9 @@
             data: {
                 labels: ['角色', '彩虹ID 7天卡', '1000 魔力卡', '5000 魔力卡', '10000 魔力卡', '1G 上传卡', '2G 上传卡', '3G 上传卡', '梓喵娘抛弃次数'],
                 datasets: [{
-                    label: '抽卡统计/次',
+                    label: '抽到次数',
                     data: [
-                        item_map[32] || 0, // 角色
+                        character || 0, // 角色
                         item_map[28] || 0, // 彩虹ID 7天卡
                         item_map[2] || 0,  // 1000 魔力卡
                         item_map[29] || 0, // 5000 魔力卡
@@ -200,7 +201,7 @@
                 maintainAspectRatio: false,
                 plugins: {
                     legend: { position: 'top' },
-                    title: { display: true, text: '抽卡统计' }
+                    title: { display: true, text: '抽卡统计/次' }
                 }
             }
         });
