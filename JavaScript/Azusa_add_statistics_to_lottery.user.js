@@ -2,7 +2,7 @@
 // @name         Azusa 抽卡界面添加统计
 // @namespace    https://github.com/ERSTT
 // @icon         https://azusa.wiki/favicon.ico
-// @version      1.8
+// @version      1.9
 // @description  Azusa 抽卡界面添加统计
 // @author       ERST
 // @match        https://azusa.wiki/*lottery*lottery
@@ -11,7 +11,7 @@
 // @updateURL    https://raw.githubusercontent.com/ERSTT/Files/refs/heads/main/JavaScript/Azusa_add_statistics_to_lottery.user.js
 // @downloadURL  https://raw.githubusercontent.com/ERSTT/Files/refs/heads/main/JavaScript/Azusa_add_statistics_to_lottery.user.js
 // @require      https://cdn.jsdelivr.net/npm/chart.js
-// @changelog    添加新域名
+// @changelog    添加部分描述
 // ==/UserScript==
 
 (function() {
@@ -22,7 +22,7 @@
 
         if (ruleHeader) {
             me.disconnect();
-            ruleHeader.innerText = "抽卡统计(不含未中奖次)";
+            ruleHeader.innerText = "抽卡统计 (不含未中奖次数)";
 
             const ruleTable = ruleHeader ? ruleHeader.nextElementSibling : null;
             if (ruleTable && ruleTable.tagName === 'TABLE') {
