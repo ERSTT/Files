@@ -2,7 +2,7 @@
 // @name         Azusa 抽卡界面添加统计
 // @namespace    https://github.com/ERSTT
 // @icon         https://azusa.wiki/favicon.ico
-// @version      3.00
+// @version      3.1
 // @description  Azusa 抽卡界面添加统计
 // @author       ERST
 // @match        https://azusa.wiki/*lottery*lottery
@@ -11,6 +11,7 @@
 // @updateURL    https://raw.githubusercontent.com/ERSTT/Files/refs/heads/main/JavaScript/Azusa_add_statistics_to_lottery.user.js
 // @downloadURL  https://raw.githubusercontent.com/ERSTT/Files/refs/heads/main/JavaScript/Azusa_add_statistics_to_lottery.user.js
 // @require      https://cdn.jsdelivr.net/npm/chart.js
+// @changelog    调整概率计算
 // ==/UserScript==
 
 (function () {
@@ -68,7 +69,6 @@
     }
 
     function updateStats(minDrawCount, ruleTable) {
-        let updatedMinDrawCount = minDrawCount; // 创建一个新的变量来存储更新的抽卡次数
         let drawCount = 0;  // 初始化抽到奖励次数的变量
         let characterCount = 0;  // 初始化角色计数变量
         let item_map = {};  // 初始化物品映射
@@ -83,7 +83,7 @@
                     return count + (log.type === 2 ? 1 : 0);
                 }, 0);
                 drawCount = logs.length; // 更新抽到奖励次数
-                updateStatsHtml(updatedMinDrawCount, drawCount, characterCount, item_map, ruleTable);
+                updateStatsHtml(minDrawCount, drawCount, characterCount, item_map, ruleTable);
             }
         };
         xhr.send();
@@ -101,7 +101,7 @@
                                 <p class="content" id="minDrawCountDisplay">至少抽卡次数: ${minDrawCount || 0} 次（消耗 ${minDrawCount * 5000 || 0} 魔力）</p>
                                 <p class="content">抽到奖励次数: ${drawCount || 0} 次（消耗 ${drawCount * 5000 || 0} 魔力）</p>
                                 <p class="content" id="unluckyCountDisplay">梓喵娘抛弃次数: ${Math.max(0, (minDrawCount - drawCount))} 次</p>
-                                <p class="content">角色: ${characterCount || 0} 个（抽到概率为 ${(characterCount / drawCount * 100).toFixed(2) || 0}% ）</p>
+                                <p class="content" id="WinningProbability">角色: ${characterCount || 0} 个（抽到概率为 ${(characterCount / minDrawCount * 100).toFixed(2) || 0}% ）</p>
                                 <p class="content">彩虹ID 7天卡: ${item_map[28] || 0} 次（${item_map[28] * 7 || 0} 天）</p>
                                 <p class="content">1G 上传卡: ${item_map[31] || 0} 次（${item_map[31] * 1 || 0} G）</p>
                                 <p class="content">2G 上传卡: ${item_map[4] || 0} 次（${item_map[4] * 2 || 0} G）</p>
@@ -121,12 +121,13 @@
         `;
 
         // 绑定复选框事件
-        bindCheckboxEvents(ruleTable, minDrawCount, drawCount, item_map); // 将 item_map 作为参数传递
+        bindCheckboxEvents(ruleTable, minDrawCount, drawCount, characterCount, item_map);
 
-        initializeChart(minDrawCount, drawCount, item_map); // 传递抽到奖励次数
+        // 初始化图表
+        initializeChart(minDrawCount, drawCount, item_map);
     }
 
-    function bindCheckboxEvents(ruleTable, initialMinDrawCount, initialDrawCount, item_map) {
+    function bindCheckboxEvents(ruleTable, initialMinDrawCount, initialDrawCount, characterCount, item_map) {
         let updatedMinDrawCount = initialMinDrawCount; // 使用初始的最小抽卡次数
         let drawCount = initialDrawCount; // 使用初始的抽到奖励次数
 
@@ -136,7 +137,7 @@
             } else {
                 updatedMinDrawCount -= 400;  // 减少 400
             }
-            updateMinDrawCountDisplay(updatedMinDrawCount, drawCount, ruleTable, item_map); // 传入当前的抽到奖励次数
+            updateMinDrawCountDisplay(updatedMinDrawCount, drawCount, characterCount, ruleTable, item_map);
         });
 
         document.getElementById('checkbox1000').addEventListener('change', function () {
@@ -145,14 +146,17 @@
             } else {
                 updatedMinDrawCount -= 1000; // 减少 1000
             }
-            updateMinDrawCountDisplay(updatedMinDrawCount, drawCount, ruleTable, item_map); // 传入当前的抽到奖励次数
+            updateMinDrawCountDisplay(updatedMinDrawCount, drawCount, characterCount, ruleTable, item_map);
         });
     }
 
-    function updateMinDrawCountDisplay(minDrawCount, drawCount, ruleTable, item_map) {
+    function updateMinDrawCountDisplay(minDrawCount, drawCount, characterCount, ruleTable, item_map) {
         const unluckyCount = Math.max(0, (minDrawCount - drawCount)); // 计算未中奖次数
+        const WinningProbability = Math.max(0, (characterCount / minDrawCount)); // 用角色数除以至少抽卡次数计算概率
+
         ruleTable.querySelector('#minDrawCountDisplay').innerText = `至少抽卡次数: ${minDrawCount || 0} 次（消耗 ${minDrawCount * 5000 || 0} 魔力）`;
         ruleTable.querySelector('#unluckyCountDisplay').innerText = `梓喵娘抛弃次数: ${unluckyCount} 次`;
+        ruleTable.querySelector('#WinningProbability').innerText = `角色: ${characterCount || 0} 个（抽到概率为 ${(WinningProbability * 100).toFixed(2) || 0}% ）`;
 
         // 更新图表
         initializeChart(minDrawCount, drawCount, item_map); // 只传入最新的参数
