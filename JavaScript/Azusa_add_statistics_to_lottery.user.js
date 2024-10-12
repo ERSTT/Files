@@ -2,7 +2,7 @@
 // @name         Azusa 抽卡界面添加统计
 // @namespace    https://github.com/ERSTT
 // @icon         https://azusa.wiki/favicon.ico
-// @version      1.7
+// @version      1.8
 // @description  Azusa 抽卡界面添加统计
 // @author       ERST
 // @match        https://azusa.wiki/*lottery*lottery
@@ -53,7 +53,7 @@
                                         <div class="px-10" style="display: flex; align-items: flex-start;">
                                             <div style="flex: 1; padding-right: 20px;">
                                                 <p class="content">抽到奖励次数: ${cnum || 0} 次（消耗 ${cnum * 5000 || 0} 魔力）</p>
-                                                <p class="content">抽到角色: ${character || 0} 个（抽到 ${(character / cnum * 100).toFixed(2) || 0}% 概率）</p>
+                                                <p class="content">抽到角色: ${character || 0} 个（抽到概率为 ${(character / cnum * 100).toFixed(2) || 0}% ）</p>
                                                 <p class="content">邀请卡: ${item_map[1] || 0} 个</p>
                                                 <p class="content">彩虹ID 7天卡: ${item_map[28] || 0} 次（${item_map[28] * 7 || 0} 天）</p>
                                                 <p class="content">1G 上传卡: ${item_map[31] || 0} 次（${item_map[31] * 1 || 0} G）</p>
