@@ -2,7 +2,7 @@
 // @name         Azusa 抽卡界面添加统计
 // @namespace    https://github.com/ERSTT
 // @icon         https://azusa.wiki/favicon.ico
-// @version      2.0
+// @version      2.1
 // @description  Azusa 抽卡界面添加统计
 // @author       ERST
 // @match        https://azusa.wiki/*lottery*lottery
@@ -11,7 +11,7 @@
 // @updateURL    https://raw.githubusercontent.com/ERSTT/Files/refs/heads/main/JavaScript/Azusa_add_statistics_to_lottery.user.js
 // @downloadURL  https://raw.githubusercontent.com/ERSTT/Files/refs/heads/main/JavaScript/Azusa_add_statistics_to_lottery.user.js
 // @require      https://cdn.jsdelivr.net/npm/chart.js
-// @changelog    添加部分描述
+// @changelog    饼图替换邀请卡为角色卡
 // ==/UserScript==
 
 (function() {
@@ -77,7 +77,7 @@
                         const ctx = document.getElementById('lotteryChart').getContext('2d');
                         const chartData = {
                             labels: [
-                                '邀请卡',
+                                '角色卡',
                                 '彩虹ID7天卡',
                                 '1000 魔力卡',
                                 '5000 魔力卡',
@@ -89,7 +89,7 @@
                             datasets: [{
                                 label: '抽卡统计/次',
                                 data: [
-                                    item_map[1] || 0,
+                                    character || 0,
                                     item_map[28] || 0,
                                     item_map[2] || 0,
                                     item_map[29] || 0,
