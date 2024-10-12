@@ -2,7 +2,7 @@
 // @name         Azusa 抽卡界面添加统计
 // @namespace    https://github.com/ERSTT
 // @icon         https://azusa.wiki/favicon.ico
-// @version      2.1
+// @version      2.2
 // @description  Azusa 抽卡界面添加统计
 // @author       ERST
 // @match        https://azusa.wiki/*lottery*lottery
@@ -11,7 +11,7 @@
 // @updateURL    https://raw.githubusercontent.com/ERSTT/Files/refs/heads/main/JavaScript/Azusa_add_statistics_to_lottery.user.js
 // @downloadURL  https://raw.githubusercontent.com/ERSTT/Files/refs/heads/main/JavaScript/Azusa_add_statistics_to_lottery.user.js
 // @require      https://cdn.jsdelivr.net/npm/chart.js
-// @changelog    饼图替换邀请卡为角色卡
+// @changelog    调整邀请卡位置
 // ==/UserScript==
 
 (function() {
@@ -54,7 +54,6 @@
                                             <div style="flex: 1; padding-right: 20px;">
                                                 <p class="content">抽到奖励次数: ${cnum || 0} 次（消耗 ${cnum * 5000 || 0} 魔力）</p>
                                                 <p class="content">角色: ${character || 0} 个（抽到概率为 ${(character / cnum * 100).toFixed(2) || 0}% ）</p>
-                                                <p class="content">邀请卡: ${item_map[1] || 0} 个</p>
                                                 <p class="content">彩虹ID 7天卡: ${item_map[28] || 0} 次（${item_map[28] * 7 || 0} 天）</p>
                                                 <p class="content">1G 上传卡: ${item_map[31] || 0} 次（${item_map[31] * 1 || 0} G）</p>
                                                 <p class="content">2G 上传卡: ${item_map[4] || 0} 次（${item_map[4] * 2 || 0} G）</p>
@@ -62,6 +61,7 @@
                                                 <p class="content">1000 魔力卡: ${item_map[2] || 0} 次（${item_map[2] * 1000 || 0} 魔力）</p>
                                                 <p class="content">5000 魔力卡: ${item_map[29] || 0} 次（${item_map[29] * 5000 || 0} 魔力）</p>
                                                 <p class="content">10000 魔力卡: ${item_map[30] || 0} 次（${item_map[30] * 10000 || 0} 魔力）</p>
+                                                <p class="content">邀请卡: ${item_map[1] || 0} 个</p>
                                             </div>
                                             <div style="flex: 0 0 auto; width: 400px; height: 400px;">
                                                 <canvas id="lotteryChart" width="400" height="400"></canvas>
