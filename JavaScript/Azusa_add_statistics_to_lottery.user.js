@@ -2,7 +2,7 @@
 // @name         Azusa 抽卡界面添加统计
 // @namespace    https://github.com/ERSTT
 // @icon         https://azusa.wiki/favicon.ico
-// @version      3.3
+// @version      3.4
 // @description  Azusa 抽卡界面添加统计
 // @author       ERST
 // @match        https://azusa.wiki/*lottery*lottery
@@ -11,7 +11,7 @@
 // @updateURL    https://raw.githubusercontent.com/ERSTT/Files/refs/heads/main/JavaScript/Azusa_add_statistics_to_lottery.user.js
 // @downloadURL  https://raw.githubusercontent.com/ERSTT/Files/refs/heads/main/JavaScript/Azusa_add_statistics_to_lottery.user.js
 // @require      https://cdn.jsdelivr.net/npm/chart.js
-// @changelog    修复饼图变量
+// @changelog    修改复选框描述
 // ==/UserScript==
 
 (function () {
@@ -96,8 +96,8 @@
                     <td align="center" class="text">
                         <div class="px-10" style="display: flex; align-items: flex-start;">
                             <div style="flex: 1; padding-right: 20px;">
-                                <label><input type="checkbox" id="checkbox400"> 购买过400点彩虹ID</label>
-                                <label><input type="checkbox" id="checkbox1000"> 购买过1000点彩虹ID</label><br>
+                                <label><input type="checkbox" id="checkbox400"> 购买过400点彩虹ID样式</label>
+                                <label><input type="checkbox" id="checkbox1000"> 购买过1000点彩虹ID样式</label><br>
                                 <p class="content" id="minDrawCountDisplay">至少抽卡次数: ${minDrawCount || 0} 次（消耗 ${minDrawCount * 5000 || 0} 魔力）</p>
                                 <p class="content">抽到奖励次数: ${drawCount || 0} 次（消耗 ${drawCount * 5000 || 0} 魔力）</p>
                                 <p class="content" id="unluckyCountDisplay">梓喵娘抛弃次数: ${Math.max(0, (minDrawCount - drawCount))} 次（消耗 ${Math.max(0, (minDrawCount - drawCount)) * 5000 || 0} 魔力）</p>
