@@ -146,9 +146,9 @@
                                 <p class="content">10G 上传卡: ${upload10G} 次（获得了 ${upload10G * 10} G 上传量）</p>
                                 <p class="content">邀请卡: ${inviteCount} 张（获得了 ${inviteCount} 个 邀请）</p>
                                 <p class="content">彩虹ID 7天卡: ${rainbow7days} 张（获得了 ${rainbow7days * 7} 天 彩虹ID）</p>
-                                <p class="content">总计所有魔力卡获得了 ${(magic1000 * 1000) + (magic5000 * 5000) + (magic10000 * 10000)} 魔力</p>
-                                <p class="content">总计所有上传卡获得了 ${(upload1G * 1) + (upload2G * 2) + (upload3G * 3) + (upload10G * 10)} G 上传量</p>
-                                <p class="content">总计消耗了 ${(totalLotteryCount * 5000) - (magic1000 * 1000) - (magic5000 * 5000) - (magic10000 * 10000)} 魔力（抽卡 - 魔力卡）</p>
+                                <p class="content">所有魔力卡共获得了 ${(magic1000 * 1000) + (magic5000 * 5000) + (magic10000 * 10000)} 魔力</p>
+                                <p class="content">所有上传卡共获得了 ${(upload1G * 1) + (upload2G * 2) + (upload3G * 3) + (upload10G * 10)} G 上传量</p>
+                                <p class="content">总计消耗了 ${(totalLotteryCount * 5000) - (magic1000 * 1000) - (magic5000 * 5000) - (magic10000 * 10000)} 魔力（抽卡魔力 - 魔力卡获得魔力）</p>
                             </div>
                             <div style="flex: 0 0 auto; width: 670px; height: 670px;">
                                 <canvas id="lotteryChart" width="500" height="500"></canvas>
