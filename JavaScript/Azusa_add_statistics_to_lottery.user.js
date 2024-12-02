@@ -2,7 +2,7 @@
 // @name         Azusa 抽卡界面添加统计
 // @namespace    https://github.com/ERSTT
 // @icon         https://azusa.wiki/favicon.ico
-// @version      4.0
+// @version      4.1
 // @description  Azusa 抽卡界面添加统计
 // @author       ERST
 // @match        https://azusa.wiki/*lottery*lottery
@@ -11,19 +11,28 @@
 // @updateURL    https://raw.githubusercontent.com/ERSTT/Files/refs/heads/main/JavaScript/Azusa_add_statistics_to_lottery.user.js
 // @downloadURL  https://raw.githubusercontent.com/ERSTT/Files/refs/heads/main/JavaScript/Azusa_add_statistics_to_lottery.user.js
 // @require      https://cdn.jsdelivr.net/npm/chart.js
-// @changelog    更新准确数据源
+// @changelog    更新准确数据源，添加简洁/详细模式切换
 // ==/UserScript==
 
 (function () {
     'use strict';
 
     const statisticsUrl = "https://azusa.wiki/lotterySettingSave.php?action=userLotteryStatistics";
+    let isDetailedMode = false; // 默认是简洁模式
+    let stats = {}; // 全局存储 stats 数据
 
     new MutationObserver((_, me) => {
         const ruleHeader = Array.from(document.getElementsByTagName('h2')).find(el => el.innerText.includes('游戏规则'));
         if (ruleHeader) {
             me.disconnect();
-            ruleHeader.innerText = "抽卡统计 (含大部分未中奖次数)";
+            ruleHeader.innerText = "抽卡统计";
+            const button = document.createElement('button');
+            button.innerText = "详细模式";
+            button.style.marginLeft = '10px';
+            button.addEventListener('click', toggleMode);
+
+            ruleHeader.appendChild(button);
+
             const ruleTable = ruleHeader.nextElementSibling;
             if (ruleTable?.tagName === 'TABLE') fetchData(ruleTable);
         }
@@ -37,14 +46,15 @@
             onload: response => {
                 if (response.status === 200) {
                     const { data } = response.response;
-                    updateStats(data, ruleTable);
+                    stats = processStatsData(data); // 保存 stats 数据
+                    updateStatsHtml(stats, ruleTable); // 更新 HTML
                 } else console.error('Error fetching statistics:', response.status);
             },
             onerror: () => console.error('Statistics request failed')
         });
     }
 
-    function updateStats(data, ruleTable) {
+    function processStatsData(data) {
         const unluckyCount = data["1"]?.[0] || 0; // 抛弃次数
         const characterCount = data["2"]?.[""] || 0; // 角色数量
         const inviteCount = data["3"]?.["1"] || 0; // 邀请卡数量
@@ -52,7 +62,6 @@
         const uploadCards = data["5"] || {};
         const rainbowCards = data["6"] || {};
 
-        // 确保每个变量都有有效值
         const magic1000 = magicCards["1000"] || 0;
         const magic5000 = magicCards["5000"] || 0;
         const magic10000 = magicCards["10000"] || 0;
@@ -62,7 +71,12 @@
         const upload10G = uploadCards["10"] || 0;
         const rainbow7days = rainbowCards["7"] || 0;
 
-        const stats = {
+        const totalLotteryCount = unluckyCount + characterCount + magic1000 + magic5000 + magic10000 + upload1G + upload2G + upload3G + upload10G + rainbow7days;
+        const rewardCount = totalLotteryCount - unluckyCount;
+
+        return {
+            totalLotteryCount,
+            rewardCount,
             unluckyCount,
             characterCount,
             inviteCount,
@@ -75,21 +89,13 @@
             upload10G,
             rainbow7days
         };
-
-        // 计算总抽卡次数和抽到奖励次数
-        const totalLotteryCount = unluckyCount + characterCount + magic1000 + magic5000 + magic10000 + upload1G + upload2G + upload3G + upload10G + rainbow7days;
-        const rewardCount = totalLotteryCount - unluckyCount;
-
-        stats.totalLotteryCount = totalLotteryCount;
-        stats.rewardCount = rewardCount;
-
-        updateStatsHtml(stats, ruleTable);
     }
 
     function updateStatsHtml(stats, ruleTable) {
         const { totalLotteryCount, rewardCount, unluckyCount, characterCount, inviteCount, magic1000, magic5000, magic10000, upload1G, upload2G, upload3G, upload10G, rainbow7days } = stats;
 
-        ruleTable.innerHTML = `
+        // 简洁模式 HTML
+        const simpleHtml = `
             <tbody>
                 <tr>
                     <td align="center" class="text">
@@ -97,20 +103,18 @@
                             <div style="flex: 1; padding-right: 20px;">
                                 <p class="content">总抽卡次数: ${totalLotteryCount} 次</p>
                                 <p class="content">抽到奖励次数: ${rewardCount} 次</p>
-                                <p class="content">抛弃次数: ${unluckyCount} 次</p>
-                                <p class="content">角色数量: ${characterCount} 个</p>
-                                <p class="content">1000 魔力卡: ${magic1000} 次（${magic1000 * 1000} 魔力）</p>
-                                <p class="content">5000 魔力卡: ${magic5000} 次（${magic5000 * 5000} 魔力）</p>
-                                <p class="content">10000 魔力卡: ${magic10000} 次（${magic10000 * 10000} 魔力）</p>
+                                <p class="content">梓喵娘抛弃次数: ${unluckyCount} 次</p>
+                                <p class="content">角色数量: ${characterCount} 个（抽到概率为 ${(characterCount / totalLotteryCount * 100).toFixed(2)}% ）</p>
+                                <p class="content">1000 魔力卡: ${magic1000} 次</p>
+                                <p class="content">5000 魔力卡: ${magic5000} 次</p>
+                                <p class="content">10000 魔力卡: ${magic10000} 次</p>
                                 <p class="content">1G 上传卡: ${upload1G} 次</p>
                                 <p class="content">2G 上传卡: ${upload2G} 次</p>
                                 <p class="content">3G 上传卡: ${upload3G} 次</p>
-                                <p class="content">10G 上传卡: ${upload10G} 次</p>
                                 <p class="content">彩虹ID 7天卡: ${rainbow7days} 张</p>
-                                <p class="content">邀请卡: ${inviteCount} 张</p>
                             </div>
-                            <div style="flex: 0 0 auto; width: 400px; height: 400px;">
-                                <canvas id="lotteryChart" width="400" height="400"></canvas>
+                            <div style="flex: 0 0 auto; width: 470px; height: 470px;">
+                                <canvas id="lotteryChart" width="470" height="470"></canvas>
                             </div>
                         </div>
                     </td>
@@ -118,10 +122,44 @@
             </tbody>
         `;
 
-        initializeChart(stats);
+        // 详细模式 HTML
+        const detailedHtml = `
+            <tbody>
+                <tr>
+                    <td align="center" class="text">
+                        <div class="px-10" style="display: flex; align-items: flex-start;">
+                            <div style="flex: 1; padding-right: 20px;">
+                                <p class="content">总抽卡次数: ${totalLotteryCount} 次（消耗了 ${totalLotteryCount * 5000} 魔力）</p>
+                                <p class="content">抽到奖励次数: ${rewardCount} 次（消耗了 ${rewardCount * 5000} 魔力）</p>
+                                <p class="content">梓喵娘抛弃次数: ${unluckyCount} 次（消耗了 ${unluckyCount * 5000} 魔力）</p>
+                                <p class="content">角色数量: ${characterCount} 个（抽到角色概率为 ${(characterCount / totalLotteryCount * 100).toFixed(2)}% ）</p>
+                                <p class="content">1000 魔力卡: ${magic1000} 次（获得了 ${magic1000 * 1000} 魔力）</p>
+                                <p class="content">5000 魔力卡: ${magic5000} 次（获得了 ${magic5000 * 5000} 魔力）</p>
+                                <p class="content">10000 魔力卡: ${magic10000} 次（获得了 ${magic10000 * 10000} 魔力）</p>
+                                <p class="content">1G 上传卡: ${upload1G} 次（获得了 ${upload1G * 1} G 上传）</p>
+                                <p class="content">2G 上传卡: ${upload2G} 次（获得了 ${upload2G * 2} G 上传）</p>
+                                <p class="content">3G 上传卡: ${upload3G} 次（获得了 ${upload3G * 3} G 上传）</p>
+                                <p class="content">10G 上传卡: ${upload10G} 次（获得了 ${upload10G * 10} G 上传）</p>
+                                <p class="content">彩虹ID 7天卡: ${rainbow7days} 张（获得了 ${rainbow7days * 7} 天 彩虹ID）</p>
+                                <p class="content">邀请卡: ${inviteCount} 张（获得了 ${inviteCount} 个 邀请）</p>
+                            </div>
+                            <div style="flex: 0 0 auto; width: 550px; height: 550px;">
+                                <canvas id="lotteryChart" width="550" height="550"></canvas>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        `;
+
+        // 切换显示内容
+        ruleTable.innerHTML = isDetailedMode ? detailedHtml : simpleHtml;
+
+       initializeChart(stats)
+
     }
 
-    let currentChart;
+    let currentChart = null;
 
     function initializeChart(stats) {
         const { unluckyCount, characterCount, magic1000, magic5000, magic10000, upload1G, upload2G, upload3G, upload10G, rainbow7days } = stats;
@@ -129,7 +167,7 @@
         const ctx = document.getElementById('lotteryChart').getContext('2d');
 
         if (currentChart) {
-            currentChart.destroy();
+            currentChart.destroy();  // 销毁现有图表
         }
 
         currentChart = new Chart(ctx, {
@@ -164,4 +202,13 @@
             }
         });
     }
+
+    function toggleMode(event) {
+        isDetailedMode = !isDetailedMode;
+        const button = event.target;
+        button.innerText = isDetailedMode ? "简洁模式" : "详细模式";
+        const ruleTable = button.closest('h2').nextElementSibling;
+        updateStatsHtml(stats, ruleTable);
+    }
+
 })();
