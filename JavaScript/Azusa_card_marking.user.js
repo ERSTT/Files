@@ -2,7 +2,7 @@
 // @name         Azusa 卡片标记
 // @namespace    https://github.com/ERSTT
 // @icon         https://azusa.wiki/favicon.ico
-// @version      1.0
+// @version      1.3
 // @description  Azusa 卡片标记
 // @author       ERST
 // @match        https://azusa.wiki/*lottery*
@@ -10,7 +10,7 @@
 // @grant        GM_xmlhttpRequest
 // @updateURL    https://raw.githubusercontent.com/ERSTT/Files/refs/heads/main/JavaScript/Azusa_card_marking.user.js
 // @downloadURL  https://raw.githubusercontent.com/ERSTT/Files/refs/heads/main/JavaScript/Azusa_card_marking.user.js
-// @changelog    添加新域名
+// @changelog    优化了代码，适配了新域名
 // ==/UserScript==
 
 (function() {
@@ -21,95 +21,72 @@
     var url3 = "https://azusa.wiki/lotterySettingSave.php?action=exchangeCharacterCardsPool";
     var url4 = "https://azusa.wiki/lotterySettingSave.php?action=lotteryCharacterCardsPool";
 
+    var currentDomain = window.location.hostname;
+    if (currentDomain === "zimiao.icu") {
+        url1 = url1.replace("azusa.wiki", "zimiao.icu");
+        url2 = url2.replace("azusa.wiki", "zimiao.icu");
+        url3 = url3.replace("azusa.wiki", "zimiao.icu");
+        url4 = url4.replace("azusa.wiki", "zimiao.icu");
+    }
+
     var combinedResult = [];
     var ownedCardIds = [];
 
-    GM_xmlhttpRequest({
-        method: "GET",
-        url: url1,
-        responseType: "json",
-        onload: function(response1) {
-            var cardIds1 = response1.response.data.map(item => item.card_id);
+    function fetchDataAndMark() {
+        GM_xmlhttpRequest({
+            method: "GET",
+            url: url1,
+            responseType: "json",
+            onload: function(response1) {
+                ownedCardIds = response1.response.data.map(item => item.card_id);
 
-            // 比对URL2的数据
+                Promise.all([
+                    fetchCards(url2, ownedCardIds),
+                    fetchCards(url3, ownedCardIds),
+                    fetchCards(url4, ownedCardIds)
+                ]).then(results => {
+                    combinedResult = results.flat();
+
+                    // 定期标记图片
+                    setInterval(() => {
+                        markCards(combinedResult, "red");
+                        markCards(response1.response.data, "green");
+                    }, 500);
+                });
+            }
+        });
+    }
+
+    function fetchCards(url, excludeIds) {
+        return new Promise(resolve => {
             GM_xmlhttpRequest({
                 method: "GET",
-                url: url2,
+                url: url,
                 responseType: "json",
-                onload: function(response2) {
-                    setTimeout(function() {
-                        var ids1 = response2.response.data.map(item => item.id);
-                        var idsToKeep1 = ids1.filter(id => !cardIds1.includes(id));
-                        var result1 = response2.response.data.filter(item => idsToKeep1.includes(item.id));
-                        combinedResult = combinedResult.concat(result1);
-                    }, 100);
+                onload: function(response) {
+                    var data = response.response.data;
+                    var ids = data.map(item => item.id || item.card_id);
+                    var idsToKeep = ids.filter(id => !excludeIds.includes(id));
+                    var filteredData = data.filter(item => idsToKeep.includes(item.id || item.card_id));
+                    resolve(filteredData);
                 }
-            });
-
-            // 比对URL3的数据
-            GM_xmlhttpRequest({
-                method: "GET",
-                url: url3,
-                responseType: "json",
-                onload: function(response3) {
-                    setTimeout(function() {
-                        var ids2 = response3.response.data.map(item => item.id);
-                        var idsToKeep2 = ids2.filter(id => !cardIds1.includes(id));
-                        var result2 = response3.response.data.filter(item => idsToKeep2.includes(item.id));
-                        combinedResult = combinedResult.concat(result2);
-                    }, 100);
-                }
-            });
-
-            // 比对URL4的数据
-            GM_xmlhttpRequest({
-                method: "GET",
-                url: url4,
-                responseType: "json",
-                onload: function(response4) {
-                    setTimeout(function() {
-                        var ids3 = response4.response.data.map(item => item.id);
-                        var idsToKeep3 = ids3.filter(id => !cardIds1.includes(id));
-                        var result3 = response4.response.data.filter(item => idsToKeep3.includes(item.id));
-                        combinedResult = combinedResult.concat(result3);
-
-                        // 输出结果到控制台
-                        console.log(combinedResult);
-
-                        // 遍历网页上的pic改红
-                        combinedResult.forEach(function(item) {
-                            var elements = document.querySelectorAll('img[src="' + item.pic + '"]');
-                            elements.forEach(function(element) {
-                                element.parentNode.style.backgroundColor = "red";
-                            });
-                        });
-                    }, 450);
-                }
-            });
-        }
-    });
-    // 获取用户已拥有的卡片数据
-    GM_xmlhttpRequest({
-        method: "GET",
-        url: url1,
-        responseType: "json",
-        onload: function(response) {
-            ownedCardIds = response.response.data.map(item => item.card_id);
-
-            // 在页面上标记用户已拥有的卡片
-            setTimeout(function() {
-                markOwnedCards(response.response.data);
-            }, 1000);
-        }
-    });
-
-    // 在页面上标记用户已拥有的卡片函数
-    function markOwnedCards(cards) {
-        cards.forEach(function(item) {
-            var elements = document.querySelectorAll('img[src="' + item.pic + '"]');
-            elements.forEach(function(element) {
-                element.parentNode.style.backgroundColor = "green";
             });
         });
     }
+
+    function markCards(cards, color) {
+        cards.forEach(function(item) {
+            var elements = document.querySelectorAll('img[src="' + item.pic + '"]');
+            elements.forEach(function(element) {
+                element.parentNode.style.backgroundColor = color;
+            });
+        });
+    }
+
+    // 初始化观察器
+    var observer = new MutationObserver(function(mutations) {
+        fetchDataAndMark();
+    });
+
+    observer.observe(document.body, { childList: true, subtree: true });
 })();
