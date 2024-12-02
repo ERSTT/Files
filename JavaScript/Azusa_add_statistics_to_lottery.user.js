@@ -11,7 +11,7 @@
 // @updateURL    https://raw.githubusercontent.com/ERSTT/Files/refs/heads/main/JavaScript/Azusa_add_statistics_to_lottery.user.js
 // @downloadURL  https://raw.githubusercontent.com/ERSTT/Files/refs/heads/main/JavaScript/Azusa_add_statistics_to_lottery.user.js
 // @require      https://cdn.jsdelivr.net/npm/chart.js
-// @changelog    更新准确数据源，添加简洁/详细模式切换,适配备用域名zimiao.icu
+// @changelog    更新准确数据源，添加简洁/详细模式切换,适配新域名
 // ==/UserScript==
 
 (function () {
