@@ -2,7 +2,7 @@
 // @name         Azusa 抽卡界面添加统计
 // @namespace    https://github.com/ERSTT
 // @icon         https://azusa.wiki/favicon.ico
-// @version      3.5
+// @version      4.0
 // @description  Azusa 抽卡界面添加统计
 // @author       ERST
 // @match        https://azusa.wiki/*lottery*lottery
@@ -11,14 +11,13 @@
 // @updateURL    https://raw.githubusercontent.com/ERSTT/Files/refs/heads/main/JavaScript/Azusa_add_statistics_to_lottery.user.js
 // @downloadURL  https://raw.githubusercontent.com/ERSTT/Files/refs/heads/main/JavaScript/Azusa_add_statistics_to_lottery.user.js
 // @require      https://cdn.jsdelivr.net/npm/chart.js
-// @changelog    修改复选框部分
+// @changelog    更新准确数据源
 // ==/UserScript==
 
 (function () {
     'use strict';
 
-    const characterCardsUrl = "https://azusa.wiki/lotterySettingSave.php?action=userCharacterCards";
-    const lotteryInfoUrl = "https://azusa.wiki/lotterySettingSave.php?action=userLotteryInfo";
+    const statisticsUrl = "https://azusa.wiki/lotterySettingSave.php?action=userLotteryStatistics";
 
     new MutationObserver((_, me) => {
         const ruleHeader = Array.from(document.getElementsByTagName('h2')).find(el => el.innerText.includes('游戏规则'));
@@ -33,83 +32,82 @@
     function fetchData(ruleTable) {
         GM_xmlhttpRequest({
             method: "GET",
-            url: characterCardsUrl,
+            url: statisticsUrl,
             responseType: "json",
             onload: response => {
                 if (response.status === 200) {
-                    const processedItems = processData(response.response.data);
-                    const totalValue = processedItems.reduce((sum, { value }) => sum + value, 0);
-                    fetchLotteryInfo(totalValue, ruleTable);
-                } else console.error('Error fetching character cards:', response.status);
+                    const { data } = response.response;
+                    updateStats(data, ruleTable);
+                } else console.error('Error fetching statistics:', response.status);
             },
-            onerror: () => console.error('Character cards request failed')
+            onerror: () => console.error('Statistics request failed')
         });
     }
 
-    function processData(items) {
-        return items.filter(item => item.from_type === 2).map(item => {
-            item.value = (item.level === 5) ? (new Date(item.created_at) < new Date('2023-07-30') ? 400 : 500) : 200;
-            return item;
-        });
-    }
+    function updateStats(data, ruleTable) {
+        const unluckyCount = data["1"]?.[0] || 0; // 抛弃次数
+        const characterCount = data["2"]?.[""] || 0; // 角色数量
+        const inviteCount = data["3"]?.["1"] || 0; // 邀请卡数量
+        const magicCards = data["4"] || {};
+        const uploadCards = data["5"] || {};
+        const rainbowCards = data["6"] || {};
 
-    function fetchLotteryInfo(currentTotal, ruleTable) {
-        GM_xmlhttpRequest({
-            method: "GET",
-            url: lotteryInfoUrl,
-            responseType: "json",
-            onload: response => {
-                if (response.status === 200) {
-                    const lotteryPoint = parseInt(response.response.data.lottery_point) || 0;
-                    updateStats(currentTotal + lotteryPoint, ruleTable);
-                } else console.error('Error fetching lottery info:', response.status);
-            },
-            onerror: () => console.error('Lottery info request failed')
-        });
-    }
+        // 确保每个变量都有有效值
+        const magic1000 = magicCards["1000"] || 0;
+        const magic5000 = magicCards["5000"] || 0;
+        const magic10000 = magicCards["10000"] || 0;
+        const upload1G = uploadCards["1"] || 0;
+        const upload2G = uploadCards["2"] || 0;
+        const upload3G = uploadCards["3"] || 0;
+        const upload10G = uploadCards["10"] || 0;
+        const rainbow7days = rainbowCards["7"] || 0;
 
-    function updateStats(minDrawCount, ruleTable) {
-        let drawCount = 0;  // 初始化抽到奖励次数的变量
-        let characterCount = 0;  // 初始化角色计数变量
-        let item_map = {};  // 初始化物品映射
-
-        const xhr = new XMLHttpRequest();
-        xhr.open("GET", 'https://azusa.wiki/lotterySettingSave.php?action=userLotteryLogs&size=99999999999&page=1', true);
-        xhr.onreadystatechange = function () {
-            if (this.readyState === 4 && this.status === 200) {
-                const { logs } = JSON.parse(this.responseText)['data'];
-                characterCount = logs.reduce((count, log) => {
-                    item_map[log.card_id] = (item_map[log.card_id] || 0) + 1;
-                    return count + (log.type === 2 ? 1 : 0);
-                }, 0);
-                drawCount = logs.length; // 更新抽到奖励次数
-                updateStatsHtml(minDrawCount, drawCount, characterCount, item_map, ruleTable);
-            }
+        const stats = {
+            unluckyCount,
+            characterCount,
+            inviteCount,
+            magic1000,
+            magic5000,
+            magic10000,
+            upload1G,
+            upload2G,
+            upload3G,
+            upload10G,
+            rainbow7days
         };
-        xhr.send();
+
+        // 计算总抽卡次数和抽到奖励次数
+        const totalLotteryCount = unluckyCount + characterCount + magic1000 + magic5000 + magic10000 + upload1G + upload2G + upload3G + upload10G + rainbow7days;
+        const rewardCount = totalLotteryCount - unluckyCount;
+
+        stats.totalLotteryCount = totalLotteryCount;
+        stats.rewardCount = rewardCount;
+
+        updateStatsHtml(stats, ruleTable);
     }
 
-    function updateStatsHtml(minDrawCount, drawCount, characterCount, item_map, ruleTable) {
+    function updateStatsHtml(stats, ruleTable) {
+        const { totalLotteryCount, rewardCount, unluckyCount, characterCount, inviteCount, magic1000, magic5000, magic10000, upload1G, upload2G, upload3G, upload10G, rainbow7days } = stats;
+
         ruleTable.innerHTML = `
             <tbody>
                 <tr>
                     <td align="center" class="text">
                         <div class="px-10" style="display: flex; align-items: flex-start;">
                             <div style="flex: 1; padding-right: 20px;">
-                                <label><input type="checkbox" id="checkbox400"> <span class="rainbow-2">购买过400点彩虹ID样式</span></label>
-                                <label><input type="checkbox" id="checkbox1000"> <span class="rainbow-cat">购买过1000点彩虹ID样式</span></label><br>
-                                <p class="content" id="minDrawCountDisplay">至少抽卡次数: ${minDrawCount || 0} 次（消耗 ${minDrawCount * 5000 || 0} 魔力）</p>
-                                <p class="content">抽到奖励次数: ${drawCount || 0} 次（消耗 ${drawCount * 5000 || 0} 魔力）</p>
-                                <p class="content" id="unluckyCountDisplay">梓喵娘抛弃次数: ${Math.max(0, (minDrawCount - drawCount))} 次（消耗 ${Math.max(0, (minDrawCount - drawCount)) * 5000 || 0} 魔力）</p>
-                                <p class="content" id="WinningProbability">角色: ${characterCount || 0} 个（抽到概率为 ${(characterCount / minDrawCount * 100).toFixed(2) || 0}% ）</p>
-                                <p class="content">彩虹ID 7天卡: ${item_map[28] || 0} 次（${item_map[28] * 7 || 0} 天）</p>
-                                <p class="content">1G 上传卡: ${item_map[31] || 0} 次（${item_map[31] * 1 || 0} G）</p>
-                                <p class="content">2G 上传卡: ${item_map[4] || 0} 次（${item_map[4] * 2 || 0} G）</p>
-                                <p class="content">3G 上传卡: ${item_map[32] || 0} 次（${item_map[32] * 3 || 0} G）</p>
-                                <p class="content">1000 魔力卡: ${item_map[2] || 0} 次（${item_map[2] * 1000 || 0} 魔力）</p>
-                                <p class="content">5000 魔力卡: ${item_map[29] || 0} 次（${item_map[29] * 5000 || 0} 魔力）</p>
-                                <p class="content">10000 魔力卡: ${item_map[30] || 0} 次（${item_map[30] * 10000 || 0} 魔力）</p>
-                                <p class="content">邀请卡: ${item_map[1] || 0} 个</p>
+                                <p class="content">总抽卡次数: ${totalLotteryCount} 次</p>
+                                <p class="content">抽到奖励次数: ${rewardCount} 次</p>
+                                <p class="content">抛弃次数: ${unluckyCount} 次</p>
+                                <p class="content">角色数量: ${characterCount} 个</p>
+                                <p class="content">1000 魔力卡: ${magic1000} 次（${magic1000 * 1000} 魔力）</p>
+                                <p class="content">5000 魔力卡: ${magic5000} 次（${magic5000 * 5000} 魔力）</p>
+                                <p class="content">10000 魔力卡: ${magic10000} 次（${magic10000 * 10000} 魔力）</p>
+                                <p class="content">1G 上传卡: ${upload1G} 次</p>
+                                <p class="content">2G 上传卡: ${upload2G} 次</p>
+                                <p class="content">3G 上传卡: ${upload3G} 次</p>
+                                <p class="content">10G 上传卡: ${upload10G} 次</p>
+                                <p class="content">彩虹ID 7天卡: ${rainbow7days} 张</p>
+                                <p class="content">邀请卡: ${inviteCount} 张</p>
                             </div>
                             <div style="flex: 0 0 auto; width: 400px; height: 400px;">
                                 <canvas id="lotteryChart" width="400" height="400"></canvas>
@@ -120,79 +118,39 @@
             </tbody>
         `;
 
-        // 绑定复选框事件
-        bindCheckboxEvents(ruleTable, minDrawCount, drawCount, characterCount, item_map);
-
-        // 初始化图表
-        initializeChart(minDrawCount, drawCount, characterCount, item_map);
+        initializeChart(stats);
     }
 
-    function bindCheckboxEvents(ruleTable, initialMinDrawCount, initialDrawCount, characterCount, item_map) {
-        let updatedMinDrawCount = initialMinDrawCount; // 使用初始的最小抽卡次数
-        let drawCount = initialDrawCount; // 使用初始的抽到奖励次数
+    let currentChart;
 
-        document.getElementById('checkbox400').addEventListener('change', function () {
-            if (this.checked) {
-                updatedMinDrawCount += 400;  // 增加 400
-            } else {
-                updatedMinDrawCount -= 400;  // 减少 400
-            }
-            updateMinDrawCountDisplay(updatedMinDrawCount, drawCount, characterCount, ruleTable, item_map);
-        });
+    function initializeChart(stats) {
+        const { unluckyCount, characterCount, magic1000, magic5000, magic10000, upload1G, upload2G, upload3G, upload10G, rainbow7days } = stats;
 
-        document.getElementById('checkbox1000').addEventListener('change', function () {
-            if (this.checked) {
-                updatedMinDrawCount += 1000; // 增加 1000
-            } else {
-                updatedMinDrawCount -= 1000; // 减少 1000
-            }
-            updateMinDrawCountDisplay(updatedMinDrawCount, drawCount, characterCount, ruleTable, item_map);
-        });
-    }
-
-    function updateMinDrawCountDisplay(minDrawCount, drawCount, characterCount, ruleTable, item_map) {
-        const unluckyCount = Math.max(0, (minDrawCount - drawCount)); // 计算未中奖次数
-        const WinningProbability = Math.max(0, (characterCount / minDrawCount)); // 用角色数除以至少抽卡次数计算概率
-
-        ruleTable.querySelector('#minDrawCountDisplay').innerText = `至少抽卡次数: ${minDrawCount || 0} 次（消耗 ${minDrawCount * 5000 || 0} 魔力）`;
-        ruleTable.querySelector('#unluckyCountDisplay').innerText = `梓喵娘抛弃次数: ${unluckyCount} 次（消耗 ${unluckyCount * 5000 || 0} 魔力）`;
-        ruleTable.querySelector('#WinningProbability').innerText = `角色: ${characterCount || 0} 个（抽到概率为 ${(WinningProbability * 100).toFixed(2) || 0}% ）`;
-
-        // 更新图表
-        initializeChart(minDrawCount, drawCount, characterCount, item_map); // 只传入最新的参数
-    }
-
-    let currentChart; // 存储当前图表的引用
-
-    function initializeChart(minDrawCount, drawCount, characterCount, item_map) {
-        const unluckyCount = Math.max(0, (minDrawCount - drawCount)); // 计算未中奖次数
-        const character = characterCount
         const ctx = document.getElementById('lotteryChart').getContext('2d');
 
-        // 如果当前图表存在，销毁它
         if (currentChart) {
             currentChart.destroy();
         }
 
-        // 创建新的图表
         currentChart = new Chart(ctx, {
             type: 'pie',
             data: {
-                labels: ['角色', '彩虹ID 7天卡', '1000 魔力卡', '5000 魔力卡', '10000 魔力卡', '1G 上传卡', '2G 上传卡', '3G 上传卡', '梓喵娘抛弃次数'],
+                labels: ['角色', '1000 魔力卡', '5000 魔力卡', '10000 魔力卡', '1G 上传卡', '2G 上传卡', '3G 上传卡', '10G 上传卡', '7天彩虹ID', '抛弃次数'],
                 datasets: [{
                     label: '抽到次数',
                     data: [
-                        character || 0, // 角色
-                        item_map[28] || 0, // 彩虹ID 7天卡
-                        item_map[2] || 0,  // 1000 魔力卡
-                        item_map[29] || 0, // 5000 魔力卡
-                        item_map[30] || 0, // 10000 魔力卡
-                        item_map[31] || 0, // 1G 上传卡
-                        item_map[4] || 0,  // 2G 上传卡
-                        item_map[32] || 0, // 3G 上传卡
-                        unluckyCount // 添加未中奖次数
+                        characterCount,
+                        magic1000,
+                        magic5000,
+                        magic10000,
+                        upload1G,
+                        upload2G,
+                        upload3G,
+                        upload10G,
+                        rainbow7days,
+                        unluckyCount,
                     ],
-                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40', '#FF1493', '#7FFF00', '#000000'], // 将未中奖设置为黑色
+                    backgroundColor: ['#FF6384', '#36A2EB', '#4BC0C0', '#9966FF', '#FF9F40', '#FF1493', '#7FFF00', '#8A2BE2', '#FFCE56', '#000000'],
                     hoverOffset: 4
                 }]
             },
