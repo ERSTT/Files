@@ -108,7 +108,7 @@
                                 <p class="content">总抽卡次数: ${totalLotteryCount} 次</p>
                                 <p class="content">抽到奖励次数: ${rewardCount} 次</p>
                                 <p class="content">梓喵娘抛弃次数: ${unluckyCount} 次</p>
-                                <p class="content">角色数量: ${characterCount} 个（抽到概率为 ${(characterCount / totalLotteryCount * 100).toFixed(2)}% ）</p>
+                                <p class="content">角色数量: ${characterCount} 个（概率为 ${(characterCount / totalLotteryCount * 100).toFixed(2)}% ）</p>
                                 <p class="content">1000 魔力卡: ${magic1000} 次</p>
                                 <p class="content">5000 魔力卡: ${magic5000} 次</p>
                                 <p class="content">10000 魔力卡: ${magic10000} 次</p>
