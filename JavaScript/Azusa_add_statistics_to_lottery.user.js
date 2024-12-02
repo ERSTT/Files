@@ -2,7 +2,7 @@
 // @name         Azusa 抽卡界面添加统计
 // @namespace    https://github.com/ERSTT
 // @icon         https://azusa.wiki/favicon.ico
-// @version      4.1
+// @version      4.2
 // @description  Azusa 抽卡界面添加统计
 // @author       ERST
 // @match        https://azusa.wiki/*lottery*lottery
@@ -11,13 +11,17 @@
 // @updateURL    https://raw.githubusercontent.com/ERSTT/Files/refs/heads/main/JavaScript/Azusa_add_statistics_to_lottery.user.js
 // @downloadURL  https://raw.githubusercontent.com/ERSTT/Files/refs/heads/main/JavaScript/Azusa_add_statistics_to_lottery.user.js
 // @require      https://cdn.jsdelivr.net/npm/chart.js
-// @changelog    更新准确数据源，添加简洁/详细模式切换
+// @changelog    更新准确数据源，添加简洁/详细模式切换,适配备用域名zimiao.icu
 // ==/UserScript==
 
 (function () {
     'use strict';
 
-    const statisticsUrl = "https://azusa.wiki/lotterySettingSave.php?action=userLotteryStatistics";
+    // 根据当前页面的域名动态设置统计 URL
+    const statisticsUrl = window.location.host.includes('zimiao.icu')
+        ? "https://zimiao.icu/lotterySettingSave.php?action=userLotteryStatistics"
+        : "https://azusa.wiki/lotterySettingSave.php?action=userLotteryStatistics";
+
     let isDetailedMode = false; // 默认是简洁模式
     let stats = {}; // 全局存储 stats 数据
 
