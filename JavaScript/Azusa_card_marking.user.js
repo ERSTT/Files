@@ -2,7 +2,7 @@
 // @name         Azusa 卡片标记
 // @namespace    https://github.com/ERSTT
 // @icon         https://azusa.wiki/favicon.ico
-// @version      1.3
+// @version      1.4
 // @description  Azusa 卡片标记
 // @author       ERST
 // @match        https://azusa.wiki/*lottery*
@@ -10,7 +10,7 @@
 // @grant        GM_xmlhttpRequest
 // @updateURL    https://raw.githubusercontent.com/ERSTT/Files/refs/heads/main/JavaScript/Azusa_card_marking.user.js
 // @downloadURL  https://raw.githubusercontent.com/ERSTT/Files/refs/heads/main/JavaScript/Azusa_card_marking.user.js
-// @changelog    优化了代码，适配了新域名
+// @changelog    优化了代码，适配了新域名，修复了上版本严重BUG
 // ==/UserScript==
 
 (function() {
@@ -32,6 +32,7 @@
     var combinedResult = [];
     var ownedCardIds = [];
 
+    // 初次获取数据并进行对比
     function fetchDataAndMark() {
         GM_xmlhttpRequest({
             method: "GET",
@@ -47,16 +48,17 @@
                 ]).then(results => {
                     combinedResult = results.flat();
 
-                    // 定期标记图片
+                    // 定期渲染标记
                     setInterval(() => {
-                        markCards(combinedResult, "red");
-                        markCards(response1.response.data, "green");
+                        markCards(combinedResult, "red");  // 只使用缓存数据
+                        markCards(response1.response.data, "green"); // 只使用缓存数据
                     }, 500);
                 });
             }
         });
     }
 
+    // 获取其他卡片数据并排除已拥有的卡片
     function fetchCards(url, excludeIds) {
         return new Promise(resolve => {
             GM_xmlhttpRequest({
@@ -74,6 +76,7 @@
         });
     }
 
+    // 标记卡片
     function markCards(cards, color) {
         cards.forEach(function(item) {
             var elements = document.querySelectorAll('img[src="' + item.pic + '"]');
@@ -83,10 +86,6 @@
         });
     }
 
-    // 初始化观察器
-    var observer = new MutationObserver(function(mutations) {
-        fetchDataAndMark();
-    });
-
-    observer.observe(document.body, { childList: true, subtree: true });
+    // 初始化时获取数据并进行渲染
+    fetchDataAndMark();
 })();
