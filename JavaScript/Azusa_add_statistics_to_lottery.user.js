@@ -2,7 +2,7 @@
 // @name         Azusa 抽卡界面添加统计
 // @namespace    https://github.com/ERSTT
 // @icon         https://azusa.wiki/favicon.ico
-// @version      4.2
+// @version      4.3
 // @description  Azusa 抽卡界面添加统计
 // @author       ERST
 // @match        https://azusa.wiki/*lottery*lottery
@@ -105,7 +105,7 @@
                     <td align="center" class="text">
                         <div class="px-10" style="display: flex; align-items: flex-start;">
                             <div style="flex: 1; padding-right: 20px;">
-                                <p class="content">总抽卡次数: ${totalLotteryCount} 次</p>
+                                <p class="content">抽卡次数: ${totalLotteryCount} 次</p>
                                 <p class="content">抽到奖励次数: ${rewardCount} 次</p>
                                 <p class="content">梓喵娘抛弃次数: ${unluckyCount} 次</p>
                                 <p class="content">角色数量: ${characterCount} 个（概率为 ${(characterCount / totalLotteryCount * 100).toFixed(2)}% ）</p>
@@ -133,22 +133,25 @@
                     <td align="center" class="text">
                         <div class="px-10" style="display: flex; align-items: flex-start;">
                             <div style="flex: 1; padding-right: 20px;">
-                                <p class="content">总抽卡次数: ${totalLotteryCount} 次（消耗了 ${totalLotteryCount * 5000} 魔力）</p>
+                                <p class="content">抽卡次数: ${totalLotteryCount} 次（消耗了 ${totalLotteryCount * 5000} 魔力）</p>
                                 <p class="content">抽到奖励次数: ${rewardCount} 次（消耗了 ${rewardCount * 5000} 魔力）</p>
                                 <p class="content">梓喵娘抛弃次数: ${unluckyCount} 次（消耗了 ${unluckyCount * 5000} 魔力）</p>
                                 <p class="content">角色数量: ${characterCount} 个（抽到角色概率为 ${(characterCount / totalLotteryCount * 100).toFixed(2)}% ）</p>
                                 <p class="content">1000 魔力卡: ${magic1000} 次（获得了 ${magic1000 * 1000} 魔力）</p>
                                 <p class="content">5000 魔力卡: ${magic5000} 次（获得了 ${magic5000 * 5000} 魔力）</p>
                                 <p class="content">10000 魔力卡: ${magic10000} 次（获得了 ${magic10000 * 10000} 魔力）</p>
-                                <p class="content">1G 上传卡: ${upload1G} 次（获得了 ${upload1G * 1} G 上传）</p>
-                                <p class="content">2G 上传卡: ${upload2G} 次（获得了 ${upload2G * 2} G 上传）</p>
-                                <p class="content">3G 上传卡: ${upload3G} 次（获得了 ${upload3G * 3} G 上传）</p>
-                                <p class="content">10G 上传卡: ${upload10G} 次（获得了 ${upload10G * 10} G 上传）</p>
-                                <p class="content">彩虹ID 7天卡: ${rainbow7days} 张（获得了 ${rainbow7days * 7} 天 彩虹ID）</p>
+                                <p class="content">1G 上传卡: ${upload1G} 次（获得了 ${upload1G * 1} G 上传量）</p>
+                                <p class="content">2G 上传卡: ${upload2G} 次（获得了 ${upload2G * 2} G 上传量）</p>
+                                <p class="content">3G 上传卡: ${upload3G} 次（获得了 ${upload3G * 3} G 上传量）</p>
+                                <p class="content">10G 上传卡: ${upload10G} 次（获得了 ${upload10G * 10} G 上传量）</p>
                                 <p class="content">邀请卡: ${inviteCount} 张（获得了 ${inviteCount} 个 邀请）</p>
+                                <p class="content">彩虹ID 7天卡: ${rainbow7days} 张（获得了 ${rainbow7days * 7} 天 彩虹ID）</p>
+                                <p class="content">总计所有魔力卡获得了 ${(magic1000 * 1000) + (magic5000 * 5000) + (magic10000 * 10000)} 魔力</p>
+                                <p class="content">总计所有上传卡获得了 ${(upload1G * 1) + (upload2G * 2) + (upload3G * 3) + (upload10G * 10)} G 上传量</p>
+                                <p class="content">总计消耗了 ${(totalLotteryCount * 5000) - (magic1000 * 1000) - (magic5000 * 5000) - (magic10000 * 10000)} 魔力（抽卡 - 魔力卡）</p>
                             </div>
-                            <div style="flex: 0 0 auto; width: 550px; height: 550px;">
-                                <canvas id="lotteryChart" width="550" height="550"></canvas>
+                            <div style="flex: 0 0 auto; width: 670px; height: 670px;">
+                                <canvas id="lotteryChart" width="500" height="500"></canvas>
                             </div>
                         </div>
                     </td>
