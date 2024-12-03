@@ -2,7 +2,7 @@
 // @name         Azusa 卡片标记
 // @namespace    https://github.com/ERSTT
 // @icon         https://azusa.wiki/favicon.ico
-// @version      1.7
+// @version      1.8
 // @description  Azusa 卡片标记
 // @author       ERST
 // @match        https://azusa.wiki/*lottery*
@@ -10,7 +10,7 @@
 // @grant        GM_xmlhttpRequest
 // @updateURL    https://raw.githubusercontent.com/ERSTT/Files/refs/heads/main/JavaScript/Azusa_card_marking.user.js
 // @downloadURL  https://raw.githubusercontent.com/ERSTT/Files/refs/heads/main/JavaScript/Azusa_card_marking.user.js
-// @changelog    抽卡后自动更新新抽到的卡牌背景为绿
+// @changelog    自动更新新抽到的卡牌背景为绿
 // ==/UserScript==
 
 (function() {
@@ -89,6 +89,11 @@
 
         // 检查按钮的 class 或其他属性
         if (target.closest('.el-button--danger.is-circle') && !target.id) {
+            refreshData();
+        }
+
+        // 检查是否点击了指定的 <span> 元素
+        if (target.closest('.el-tag.el-tag--light') && target.innerText.includes('200点数兑换')) {
             refreshData();
         }
     });
