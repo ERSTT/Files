@@ -2,7 +2,7 @@
 // @name         Azusa 抽卡界面添加统计
 // @namespace    https://github.com/ERSTT
 // @icon         https://azusa.wiki/favicon.ico
-// @version      4.4
+// @version      4.5
 // @description  Azusa 抽卡界面添加统计
 // @author       ERST
 // @match        https://azusa.wiki/*lottery*lottery
@@ -11,7 +11,7 @@
 // @updateURL    https://raw.githubusercontent.com/ERSTT/Files/refs/heads/main/JavaScript/Azusa_add_statistics_to_lottery.user.js
 // @downloadURL  https://raw.githubusercontent.com/ERSTT/Files/refs/heads/main/JavaScript/Azusa_add_statistics_to_lottery.user.js
 // @require      https://cdn.jsdelivr.net/npm/chart.js
-// @changelog    详细模式部分计算修改
+// @changelog    抽卡完后刷新数据
 // ==/UserScript==
 
 (function () {
@@ -41,6 +41,27 @@
             if (ruleTable?.tagName === 'TABLE') fetchData(ruleTable);
         }
     }).observe(document, { childList: true, subtree: true });
+
+    // 动态监听按钮
+    document.addEventListener('click', function (event) {
+        const target = event.target;
+
+        if (target.closest('.el-button--danger.is-circle') && !target.id) {
+            refreshData();
+        }
+    });
+
+    function refreshData() {
+
+        // 重新获取数据并更新 HTML
+        const ruleHeader = Array.from(document.getElementsByTagName('h2')).find(el => el.innerText.includes('抽卡统计'));
+        const ruleTable = ruleHeader?.nextElementSibling;
+        if (ruleTable?.tagName === 'TABLE') {
+            fetchData(ruleTable);
+        } else {
+            console.error("未找到规则表格，无法刷新数据");
+        }
+    }
 
     function fetchData(ruleTable) {
         GM_xmlhttpRequest({
