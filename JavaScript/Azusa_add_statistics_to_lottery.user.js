@@ -2,7 +2,7 @@
 // @name         Azusa 抽卡界面添加统计
 // @namespace    https://github.com/ERSTT
 // @icon         https://azusa.wiki/favicon.ico
-// @version      4.3
+// @version      4.4
 // @description  Azusa 抽卡界面添加统计
 // @author       ERST
 // @match        https://azusa.wiki/*lottery*lottery
@@ -11,7 +11,7 @@
 // @updateURL    https://raw.githubusercontent.com/ERSTT/Files/refs/heads/main/JavaScript/Azusa_add_statistics_to_lottery.user.js
 // @downloadURL  https://raw.githubusercontent.com/ERSTT/Files/refs/heads/main/JavaScript/Azusa_add_statistics_to_lottery.user.js
 // @require      https://cdn.jsdelivr.net/npm/chart.js
-// @changelog    更新准确数据源，添加简洁/详细模式切换,适配新域名
+// @changelog    详细模式部分计算修改
 // ==/UserScript==
 
 (function () {
@@ -134,8 +134,8 @@
                         <div class="px-10" style="display: flex; align-items: flex-start;">
                             <div style="flex: 1; padding-right: 20px;">
                                 <p class="content">抽卡次数: ${totalLotteryCount} 次（消耗了 ${totalLotteryCount * 5000} 魔力）</p>
-                                <p class="content">抽到奖励次数: ${rewardCount} 次（消耗了 ${rewardCount * 5000} 魔力）</p>
-                                <p class="content">梓喵娘抛弃次数: ${unluckyCount} 次（消耗了 ${unluckyCount * 5000} 魔力）</p>
+                                <p class="content">抽到奖励次数: ${rewardCount} 次（抽到奖励概率为 ${(rewardCount / totalLotteryCount * 100).toFixed(2)}%）</p>
+                                <p class="content">梓喵娘抛弃次数: ${unluckyCount} 次（被抛弃概率为 ${(unluckyCount / totalLotteryCount * 100).toFixed(2)}%）</p>
                                 <p class="content">角色数量: ${characterCount} 个（抽到角色概率为 ${(characterCount / totalLotteryCount * 100).toFixed(2)}%）</p>
                                 <p class="content">1000 魔力卡: ${magic1000} 次（获得了 ${magic1000 * 1000} 魔力）</p>
                                 <p class="content">5000 魔力卡: ${magic5000} 次（获得了 ${magic5000 * 5000} 魔力）</p>
