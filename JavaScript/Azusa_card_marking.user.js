@@ -2,7 +2,7 @@
 // @name         Azusa 卡片标记
 // @namespace    https://github.com/ERSTT
 // @icon         https://azusa.wiki/favicon.ico
-// @version      1.6
+// @version      1.7
 // @description  Azusa 卡片标记
 // @author       ERST
 // @match        https://azusa.wiki/*lottery*
@@ -31,7 +31,6 @@
 
     var combinedResult = [];
     var ownedCardIds = [];
-    var intervalId = null;  // 用于保存定时器的 ID
 
     // 初次获取数据并进行对比
     function fetchDataAndMark() {
@@ -46,8 +45,11 @@
                     .then(results => {
                         combinedResult = results.flat();
 
-                        // 开始定时渲染标记
-                        startMarkingInterval(response1.response.data);
+                        // 定期渲染标记
+                        setInterval(() => {
+                            markCards(combinedResult, "red");  // 只使用缓存数据
+                            markCards(response1.response.data, "green"); // 只使用缓存数据
+                        }, 500);
                     });
             }
         });
@@ -81,46 +83,20 @@
         });
     }
 
-    // 启动定时器定期标记卡片
-    function startMarkingInterval(greenCards) {
-        if (intervalId) {
-            clearInterval(intervalId);  // 如果已有定时器，先清除
-        }
-
-        // 设置新的定时器来标记红绿卡片
-        intervalId = setInterval(() => {
-            markCards(combinedResult, "red");  // 只使用缓存数据
-            markCards(greenCards, "green");   // 只使用缓存数据
-        }, 500);
-    }
-
     // 动态监听按钮点击事件
     document.addEventListener('click', function (event) {
         const target = event.target;
 
         // 检查按钮的 class 或其他属性
         if (target.closest('.el-button--danger.is-circle') && !target.id) {
-            markGreenCards(); // 按钮触发后标记绿卡
+            refreshData();
         }
     });
 
-    // 只访问标绿的URL并重新标绿
-    function markGreenCards() {
-        // 清除定时器，防止继续标红
-        if (intervalId) {
-            clearInterval(intervalId);
-        }
-
-        // 只访问标记为“绿”的 URL
-        GM_xmlhttpRequest({
-            method: "GET",
-            url: url1,
-            responseType: "json",
-            onload: function(response1) {
-                // 标记所有卡片为绿
-                markCards(response1.response.data, "green");
-            }
-        });
+    // 刷新数据并重新标记
+    function refreshData() {
+        // 重新调用 fetchDataAndMark() 更新缓存数据和重新标记
+        fetchDataAndMark();
     }
 
     // 初始化时获取数据并进行渲染
