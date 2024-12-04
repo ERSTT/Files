@@ -2,7 +2,7 @@
 // @name         Azusa 卡片标记
 // @namespace    https://github.com/ERSTT
 // @icon         https://azusa.wiki/favicon.ico
-// @version      1.8
+// @version      1.9
 // @description  Azusa 卡片标记
 // @author       ERST
 // @match        https://azusa.wiki/*lottery*
@@ -86,14 +86,14 @@
     // 动态监听按钮点击事件
     document.addEventListener('click', function (event) {
         const target = event.target;
-
+    
         // 检查按钮的 class 或其他属性
         if (target.closest('.el-button--danger.is-circle') && !target.id) {
             refreshData();
         }
-
-        // 检查是否点击了指定的 <span> 元素
-        if (target.closest('.el-tag.el-tag--light') && target.innerText.includes('200点数兑换')) {
+    
+        // 检查是否点击了指定的按钮
+        if (target.closest('.exchange_btn .el-button') && !target.id) {
             refreshData();
         }
     });
