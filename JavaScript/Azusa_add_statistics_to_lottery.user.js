@@ -2,25 +2,27 @@
 // @name         Azusa 抽卡界面添加统计
 // @namespace    https://github.com/ERSTT
 // @icon         https://azusa.wiki/favicon.ico
-// @version      4.5
+// @version      4.6
 // @description  Azusa 抽卡界面添加统计
 // @author       ERST
-// @match        https://azusa.wiki/*lottery*lottery
-// @match        https://zimiao.icu/*lottery*lottery
+// @match        https://azusa.wiki/*lottery*lottery*
+// @match        https://zimiao.icu/*lottery*lottery*
 // @grant        GM_xmlhttpRequest
 // @updateURL    https://raw.githubusercontent.com/ERSTT/Files/refs/heads/main/JavaScript/Azusa_add_statistics_to_lottery.user.js
 // @downloadURL  https://raw.githubusercontent.com/ERSTT/Files/refs/heads/main/JavaScript/Azusa_add_statistics_to_lottery.user.js
 // @require      https://cdn.jsdelivr.net/npm/chart.js
-// @changelog    抽卡完后刷新数据
+// @changelog    适配新安全参数
 // ==/UserScript==
 
 (function () {
     'use strict';
 
+    // 获取URL中的csrf_token参数
+    const urlParams = new URLSearchParams(window.location.search);
+    const csrfToken = urlParams.get('csrf_token');
+
     // 根据当前页面的域名动态设置统计 URL
-    const statisticsUrl = window.location.host.includes('zimiao.icu')
-        ? "https://zimiao.icu/lotterySettingSave.php?action=userLotteryStatistics"
-        : "https://azusa.wiki/lotterySettingSave.php?action=userLotteryStatistics";
+    const statisticsUrl = `https://${window.location.host}/lotterySettingSave.php?csrf_token=${csrfToken}&action=userLotteryStatistics`;
 
     let isDetailedMode = false; // 默认是简洁模式
     let stats = {}; // 全局存储 stats 数据
@@ -52,7 +54,6 @@
     });
 
     function refreshData() {
-
         // 重新获取数据并更新 HTML
         const ruleHeader = Array.from(document.getElementsByTagName('h2')).find(el => el.innerText.includes('抽卡统计'));
         const ruleTable = ruleHeader?.nextElementSibling;
@@ -183,8 +184,7 @@
         // 切换显示内容
         ruleTable.innerHTML = isDetailedMode ? detailedHtml : simpleHtml;
 
-       initializeChart(stats)
-
+        initializeChart(stats);
     }
 
     let currentChart = null;
