@@ -2,7 +2,7 @@
 // @name         Azusa 卡片标记
 // @namespace    https://github.com/ERSTT
 // @icon         https://azusa.wiki/favicon.ico
-// @version      1.9
+// @version      2.0
 // @description  Azusa 卡片标记
 // @author       ERST
 // @match        https://azusa.wiki/*lottery*
@@ -10,24 +10,24 @@
 // @grant        GM_xmlhttpRequest
 // @updateURL    https://raw.githubusercontent.com/ERSTT/Files/refs/heads/main/JavaScript/Azusa_card_marking.user.js
 // @downloadURL  https://raw.githubusercontent.com/ERSTT/Files/refs/heads/main/JavaScript/Azusa_card_marking.user.js
-// @changelog    自动更新新抽到的卡牌背景为绿
+// @changelog    此更新仅为适配新安全参数, 未做BUG修复，稍后此脚本会更新为 未拥有卡片添加未拥有角标 功能的脚本
 // ==/UserScript==
 
 (function() {
     'use strict';
 
-    var url1 = "https://azusa.wiki/lotterySettingSave.php?action=userCharacterCards";
-    var url2 = "https://azusa.wiki/lotterySettingSave.php?action=specialExchangeCharacterCardsPool";
-    var url3 = "https://azusa.wiki/lotterySettingSave.php?action=exchangeCharacterCardsPool";
-    var url4 = "https://azusa.wiki/lotterySettingSave.php?action=lotteryCharacterCardsPool";
-
+    // 获取当前页面的域名
     var currentDomain = window.location.hostname;
-    if (currentDomain === "zimiao.icu") {
-        url1 = url1.replace("azusa.wiki", "zimiao.icu");
-        url2 = url2.replace("azusa.wiki", "zimiao.icu");
-        url3 = url3.replace("azusa.wiki", "zimiao.icu");
-        url4 = url4.replace("azusa.wiki", "zimiao.icu");
-    }
+
+    // 获取URL中的csrf_token参数
+    var urlParams = new URLSearchParams(window.location.search);
+    var csrfToken = urlParams.get('csrf_token');
+
+    // 动态构建 URL
+    var url1 = `https://${currentDomain}/lotterySettingSave.php?csrf_token=${csrfToken}&action=userCharacterCards`;
+    var url2 = `https://${currentDomain}/lotterySettingSave.php?csrf_token=${csrfToken}&action=specialExchangeCharacterCardsPool`;
+    var url3 = `https://${currentDomain}/lotterySettingSave.php?csrf_token=${csrfToken}&action=exchangeCharacterCardsPool`;
+    var url4 = `https://${currentDomain}/lotterySettingSave.php?csrf_token=${csrfToken}&action=lotteryCharacterCardsPool`;
 
     var combinedResult = [];
     var ownedCardIds = [];
@@ -86,12 +86,12 @@
     // 动态监听按钮点击事件
     document.addEventListener('click', function (event) {
         const target = event.target;
-    
+
         // 检查按钮的 class 或其他属性
         if (target.closest('.el-button--danger.is-circle') && !target.id) {
             refreshData();
         }
-    
+
         // 检查是否点击了指定的按钮
         if (target.closest('.exchange_btn .el-button') && !target.id) {
             refreshData();
