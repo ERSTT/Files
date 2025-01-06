@@ -11,7 +11,7 @@
 // @updateURL    https://raw.githubusercontent.com/ERSTT/Files/refs/heads/main/JavaScript/Azusa_add_statistics_to_lottery.user.js
 // @downloadURL  https://raw.githubusercontent.com/ERSTT/Files/refs/heads/main/JavaScript/Azusa_add_statistics_to_lottery.user.js
 // @require      https://cdn.jsdelivr.net/npm/chart.js
-// @changelog    适配新安全参数
+// @changelog    适配新安全参数, 默认是详细模式
 // ==/UserScript==
 
 (function () {
@@ -24,7 +24,7 @@
     // 根据当前页面的域名动态设置统计 URL
     const statisticsUrl = `https://${window.location.host}/lotterySettingSave.php?csrf_token=${csrfToken}&action=userLotteryStatistics`;
 
-    let isDetailedMode = true; // 默认是简洁模式
+    let isDetailedMode = true; // 默认是详细模式
     let stats = {}; // 全局存储 stats 数据
 
     new MutationObserver((_, me) => {
