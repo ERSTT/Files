@@ -24,7 +24,7 @@
     // 根据当前页面的域名动态设置统计 URL
     const statisticsUrl = `https://${window.location.host}/lotterySettingSave.php?csrf_token=${csrfToken}&action=userLotteryStatistics`;
 
-    let isDetailedMode = false; // 默认是简洁模式
+    let isDetailedMode = true; // 默认是简洁模式
     let stats = {}; // 全局存储 stats 数据
 
     new MutationObserver((_, me) => {
