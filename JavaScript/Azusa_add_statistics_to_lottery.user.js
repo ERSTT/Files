@@ -33,7 +33,7 @@
             me.disconnect();
             ruleHeader.innerText = "抽卡统计";
             const button = document.createElement('button');
-            button.innerText = "详细模式";
+            button.innerText = "简洁模式";
             button.style.marginLeft = '10px';
             button.addEventListener('click', toggleMode);
 
