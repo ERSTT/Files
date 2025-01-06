@@ -2,7 +2,7 @@
 // @name         Azusa 抽卡界面添加统计
 // @namespace    https://github.com/ERSTT
 // @icon         https://azusa.wiki/favicon.ico
-// @version      4.6
+// @version      4.7
 // @description  Azusa 抽卡界面添加统计
 // @author       ERST
 // @match        https://azusa.wiki/*lottery*lottery*
