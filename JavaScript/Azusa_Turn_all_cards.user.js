@@ -2,15 +2,15 @@
 // @name         Azusa 一键翻转所有卡片
 // @namespace    https://github.com/ERSTT
 // @icon         https://azusa.wiki/favicon.ico
-// @version      1.2
+// @version      1.3
 // @description  Azusa 一键翻转所有卡片
 // @author       ERST
-// @match        https://azusa.wiki/*lottery*lottery
-// @match        https://zimiao.icu/*lottery*lottery
+// @match        https://zimiao.icu/*lottery.php*action=lottery*
+// @match        https://zimiao.icu/*lottery.php*action=lottery*
 // @grant        none
 // @updateURL    https://raw.githubusercontent.com/ERSTT/Files/refs/heads/main/JavaScript/Azusa_Turn_all_cards.user.js
 // @downloadURL  https://raw.githubusercontent.com/ERSTT/Files/refs/heads/main/JavaScript/Azusa_Turn_all_cards.user.js
-// @changelog    添加新域名
+// @changelog    适配新版网页
 // ==/UserScript==
 
 (function() {
