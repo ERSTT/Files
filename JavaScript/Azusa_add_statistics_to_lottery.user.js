@@ -2,7 +2,7 @@
 // @name         Azusa 抽卡界面添加统计
 // @namespace    https://github.com/ERSTT
 // @icon         https://azusa.wiki/favicon.ico
-// @version      4.7
+// @version      4.8
 // @description  Azusa 抽卡界面添加统计
 // @author       ERST
 // @match        https://azusa.wiki/*lottery*lottery*
@@ -11,7 +11,7 @@
 // @updateURL    https://raw.githubusercontent.com/ERSTT/Files/refs/heads/main/JavaScript/Azusa_add_statistics_to_lottery.user.js
 // @downloadURL  https://raw.githubusercontent.com/ERSTT/Files/refs/heads/main/JavaScript/Azusa_add_statistics_to_lottery.user.js
 // @require      https://cdn.jsdelivr.net/npm/chart.js
-// @changelog    适配新安全参数, 默认是详细模式
+// @changelog    因抽卡涨价,未找到合适的计算方式,所以暂时删除消耗魔力计算
 // ==/UserScript==
 
 (function () {
@@ -155,7 +155,7 @@
                     <td align="center" class="text">
                         <div class="px-10" style="display: flex; align-items: flex-start;">
                             <div style="flex: 1; padding-right: 20px;">
-                                <p class="content">抽卡次数: ${totalLotteryCount} 次（消耗了 ${totalLotteryCount * 5000} 魔力）</p>
+                                <p class="content">抽卡次数: ${totalLotteryCount} 次</p>
                                 <p class="content">抽到奖励次数: ${rewardCount} 次（抽到奖励概率为 ${(rewardCount / totalLotteryCount * 100).toFixed(2)}%）</p>
                                 <p class="content">梓喵娘抛弃次数: ${unluckyCount} 次（被抛弃概率为 ${(unluckyCount / totalLotteryCount * 100).toFixed(2)}%）</p>
                                 <p class="content">角色数量: ${characterCount} 个（抽到角色概率为 ${(characterCount / totalLotteryCount * 100).toFixed(2)}%）</p>
@@ -170,7 +170,6 @@
                                 <p class="content">彩虹ID 7天卡: ${rainbow7days} 张（获得了 ${rainbow7days * 7} 天 彩虹ID）</p>
                                 <p class="content">所有魔力卡共获得了 ${(magic1000 * 1000) + (magic5000 * 5000) + (magic10000 * 10000)} 魔力</p>
                                 <p class="content">所有上传卡共获得了 ${(upload1G * 1) + (upload2G * 2) + (upload3G * 3) + (upload10G * 10)} G 上传量</p>
-                                <p class="content">总计消耗了 ${(totalLotteryCount * 5000) - (magic1000 * 1000) - (magic5000 * 5000) - (magic10000 * 10000)} 魔力（抽卡魔力 - 魔力卡获得魔力）</p>
                             </div>
                             <div style="flex: 0 0 auto; width: 670px; height: 670px;">
                                 <canvas id="lotteryChart" width="500" height="500"></canvas>
