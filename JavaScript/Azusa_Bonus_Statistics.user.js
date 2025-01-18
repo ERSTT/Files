@@ -2,23 +2,31 @@
 // @name         Azusa 魔力统计
 // @namespace    https://github.com/ERSTT
 // @icon         https://azusa.wiki/favicon.ico
-// @version      1.0
+// @version      1.1
 // @description  Azusa 个人页魔力统计改为表格形式
 // @author       ERST
 // @match        https://azusa.wiki/*userdetails*
 // @match        https://zimiao.icu/*userdetails*
-// @grant        GM_addStyle
 // @grant        GM_xmlhttpRequest
 // @updateURL    https://raw.githubusercontent.com/ERSTT/Files/refs/heads/main/JavaScript/Azusa_Bonus_Statistics.user.js
 // @downloadURL  https://raw.githubusercontent.com/ERSTT/Files/refs/heads/main/JavaScript/Azusa_Bonus_Statistics.user.js
-// @changelog    初始发布
+// @changelog    适配MAGA
 // ==/UserScript==
 
 (function () {
     'use strict';
 
-    GM_addStyle('https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css');
-    GM_addStyle(`
+    // Function to add styles directly to the document
+    function addStyles(styles) {
+        const styleSheet = document.createElement('style');
+        styleSheet.type = 'text/css';
+        styleSheet.innerText = styles;
+        document.head.appendChild(styleSheet);
+    }
+
+    // Add necessary styles
+    addStyles(`
+        @import url('https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css');
         .toggle-link {
             font-size: 12px;
             color: #007bff;
