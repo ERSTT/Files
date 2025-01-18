@@ -16,33 +16,6 @@
 (function () {
     'use strict';
 
-    // Function to add styles directly to the document
-    function addStyles(styles) {
-        const styleSheet = document.createElement('style');
-        styleSheet.type = 'text/css';
-        styleSheet.innerText = styles;
-        document.head.appendChild(styleSheet);
-    }
-
-    // Add necessary styles
-    addStyles(`
-        @import url('https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css');
-        .toggle-link {
-            font-size: 12px;
-            color: #007bff;
-            cursor: pointer;
-            text-decoration: underline;
-            margin-left: 10px;
-        }
-        .toggle-link:hover {
-            color: #0056b3;
-        }
-        table.dataTable td,
-        table.dataTable th {
-            text-align: center;
-        }
-    `);
-
     const loadScript = (src) => {
         return new Promise((resolve, reject) => {
             const script = document.createElement('script');
@@ -118,6 +91,9 @@
         const showAllLink = document.createElement('span');
         showAllLink.className = 'toggle-link';
         showAllLink.textContent = '查看所有详情►';
+        showAllLink.style.color = '#007bff';  // 设置链接颜色为蓝色
+        showAllLink.style.cursor = 'pointer';
+        showAllLink.style.textDecoration = 'underline';
         showAllLink.onclick = () => {
             const filters = $('#filterDiv');
             const table = $('#magicStatsTable');
@@ -187,6 +163,9 @@
             const detailsLink = document.createElement('span');
             detailsLink.className = 'toggle-link';
             detailsLink.textContent = '查看详情►';
+            detailsLink.style.color = '#007bff';  // 设置链接颜色为蓝色
+            detailsLink.style.cursor = 'pointer';
+            detailsLink.style.textDecoration = 'underline';
             projectStatsDiv.appendChild(detailsLink);
 
             const detailsContainer = document.createElement('div');
