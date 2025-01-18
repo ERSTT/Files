@@ -75,7 +75,7 @@
                 white-space: nowrap;
                 letter-spacing: .15em;
                 vertical-align: bottom; /* 与其他文本底部对齐 */
-                line-height: -2; /* 调整行高，使字体稍微降低 */
+                line-height: -1.5; /* 调整行高，使字体稍微降低 */
             }
 
             .typewriter::after {
