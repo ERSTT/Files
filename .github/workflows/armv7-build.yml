@@ -24,20 +24,26 @@ jobs:
           git clone https://github.com/diegocr/netcat.git
           cd netcat
 
-      # 步骤4: 编译 Netcat
+      # 步骤4: 自动修复 Makefile 中的格式问题
+      - name: Fix Makefile formatting
+        run: |
+          # 替换 Makefile 中的空格为 Tab
+          sed -i 's/^[ ]*\([^ ]\)/\t\1/' netcat/Makefile  # 确保前面是 Tab 字符
+
+      # 步骤5: 编译 Netcat
       - name: Build Netcat for ARMv7
         run: |
           cd netcat
           make CC=arm-linux-gnueabihf-gcc  # 使用交叉编译器进行编译
 
-      # 步骤5: 保存编译结果
+      # 步骤6: 保存编译结果
       - name: Save ARMv7 Binary
         run: |
           cd netcat
           mkdir -p $GITHUB_WORKSPACE/artifacts
           cp src/nc $GITHUB_WORKSPACE/artifacts/nc-armv7
 
-      # 步骤6: 提交二进制文件到仓库
+      # 步骤7: 提交二进制文件到仓库
       - name: Commit and push ARMv7 binary to repository
         run: |
           cd $GITHUB_WORKSPACE
