@@ -24,26 +24,20 @@ jobs:
           git clone https://github.com/diegocr/netcat.git
           cd netcat
 
-      # 步骤4: 配置编译环境为 ARMv7
-      - name: Configure for ARMv7
-        run: |
-          cd netcat
-          ./configure --host=arm-linux-gnueabihf
-
-      # 步骤5: 编译 Netcat
+      # 步骤4: 编译 Netcat
       - name: Build Netcat for ARMv7
         run: |
           cd netcat
-          make
+          make CC=arm-linux-gnueabihf-gcc  # 使用交叉编译器进行编译
 
-      # 步骤6: 保存编译结果
+      # 步骤5: 保存编译结果
       - name: Save ARMv7 Binary
         run: |
           cd netcat
           mkdir -p $GITHUB_WORKSPACE/artifacts
           cp src/nc $GITHUB_WORKSPACE/artifacts/nc-armv7
 
-      # 步骤7: 提交二进制文件到仓库
+      # 步骤6: 提交二进制文件到仓库
       - name: Commit and push ARMv7 binary to repository
         run: |
           cd $GITHUB_WORKSPACE
