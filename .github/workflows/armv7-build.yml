@@ -1,51 +1,51 @@
 name: Build Netcat for ARMv7
 
 on:
-  workflow_dispatch:  # 手动触发
+  workflow_dispatch:  # Manually triggered workflow
 
 jobs:
   build:
-    runs-on: ubuntu-latest  # 使用最新的 Ubuntu 环境
+    runs-on: ubuntu-latest  # Use the latest Ubuntu environment
 
     steps:
-      # 步骤1: 检出代码
+      # Step 1: Checkout repository
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      # 步骤2: 设置交叉编译工具链
+      # Step 2: Set up cross-compilation environment
       - name: Set up cross-compilation environment
         run: |
           sudo apt-get update
           sudo apt-get install -y gcc-arm-linux-gnueabihf make autoconf libtool
 
-      # 步骤3: 克隆并进入 Netcat 源码仓库
+      # Step 3: Clone and navigate to Netcat source repository
       - name: Clone Netcat repository
         run: |
           git clone https://github.com/diegocr/netcat.git
           cd netcat
 
-      # 步骤4: 配置编译环境为 ARMv7
+      # Step 4: Configure for ARMv7
       - name: Configure for ARMv7
         run: |
           cd netcat
           ./configure --host=arm-linux-gnueabihf
 
-      # 步骤5: 编译 Netcat
+      # Step 5: Build Netcat
       - name: Build Netcat for ARMv7
         run: |
           cd netcat
           make
 
-      # 步骤6: 保存编译结果
+      # Step 6: Save ARMv7 binary
       - name: Save ARMv7 Binary
         run: |
           cd netcat
           mkdir -p $GITHUB_WORKSPACE/artifacts
           cp src/nc $GITHUB_WORKSPACE/artifacts/nc-armv7
 
-      # 步骤7: 上传二进制文件作为构建产物
+      # Step 7: Upload the ARMv7 binary as a build artifact
       - name: Upload ARMv7 binary
-        uses: actions/upload-artifact@v2  # 使用 v2 版本
+        uses: actions/upload-artifact@v3  # Use v3 for upload-artifact action
         with:
           name: nc-armv7
           path: $GITHUB_WORKSPACE/artifacts/nc-armv7
