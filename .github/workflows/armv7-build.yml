@@ -1,55 +1,50 @@
 name: Build Netcat for ARMv7
 
 on:
-  workflow_dispatch:  # 手动触发
+  workflow_dispatch:  # 手动触发工作流
 
 jobs:
   build:
     runs-on: ubuntu-latest  # 使用最新的 Ubuntu 环境
 
     steps:
-      # 步骤1: 检出代码
+      # Step 1: Checkout 仓库（注意这里需要有推送权限）
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      # 步骤2: 设置交叉编译工具链
+      # Step 2: 设置交叉编译环境
       - name: Set up cross-compilation environment
         run: |
           sudo apt-get update
           sudo apt-get install -y gcc-arm-linux-gnueabihf make autoconf libtool
 
-      # 步骤3: 克隆并进入 Netcat 源码仓库
+      # Step 3: 克隆 Netcat 仓库（使用另一个版本，避免找不到 Makefile 的问题）
       - name: Clone Netcat repository
-        run: |
-          git clone https://github.com/diegocr/netcat.git
-          cd netcat
+        run: git clone https://github.com/andrew-codes/netcat-traditional.git
 
-      # 步骤4: 自动修复 Makefile 中的格式问题
-      - name: Fix Makefile formatting
-        run: |
-          # 替换 Makefile 中的空格为 Tab
-          sed -i 's/^[ ]*\([^ ]\)/\t\1/' netcat/Makefile  # 确保前面是 Tab 字符
+      # Step 4: Configure for ARMv7
+      - name: Configure for ARMv7
+        working-directory: netcat-traditional
+        run: ./configure --host=arm-linux-gnueabihf
 
-      # 步骤5: 编译 Netcat
+      # Step 5: Build Netcat for ARMv7
       - name: Build Netcat for ARMv7
-        run: |
-          cd netcat
-          make CC=arm-linux-gnueabihf-gcc  # 使用交叉编译器进行编译
+        working-directory: netcat-traditional
+        run: make
 
-      # 步骤6: 保存编译结果
-      - name: Save ARMv7 Binary
+      # Step 6: 保存 ARMv7 二进制到仓库中，并通过提交保存
+      - name: Save ARMv7 Binary in repository
         run: |
-          cd netcat
-          mkdir -p $GITHUB_WORKSPACE/artifacts
-          cp src/nc $GITHUB_WORKSPACE/artifacts/nc-armv7
-
-      # 步骤7: 提交二进制文件到仓库
-      - name: Commit and push ARMv7 binary to repository
-        run: |
-          cd $GITHUB_WORKSPACE
-          # 添加二进制文件到 git
-          git config user.name "GitHub Actions"
-          git config user.email "actions@github.com"
-          git add artifacts/nc-armv7
-          git commit -m "Add ARMv7 binary for Netcat"
-          git push origin HEAD:main  # 或者推送到其他分支
+          # 在仓库根目录下创建 bin 目录
+          mkdir -p bin
+          # 复制编译得到的二进制文件到 bin 目录（根据仓库实际生成文件路径调整）
+          cp netcat-traditional/nc bin/nc-armv7
+          
+          # 配置 Git 提交用户信息
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          
+          # 添加并提交二进制文件
+          git add bin/nc-armv7
+          git commit -m "Add ARMv7 binary of nc"
+          git push
